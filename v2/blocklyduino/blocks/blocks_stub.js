@@ -443,32 +443,466 @@ peripheralBlocks.forEach(function(name) {
 });
 
 // ===================== DISPLAY =====================
-var displayBlocks = [
-  'lcd2_begin_i2c', 'lcd2_customchar', 'lcd2_clear', 'lcd2_print',
-  'lcd2_print_customchar', 'lcd2_print2', 'lcd2_print2_customchar',
-  'lcd2_backlight', 'lcd2_cursor', 'lcd2_display', 'lcd2_scroll',
-  'oled_init', 'oled_rotation', 'oled_clear', 'oled_show',
-  'oled_drawtext', 'oled_drawbitmap', 'oled_drawpixel', 'oled_drawline',
-  'oled_drawrectangle', 'oled_drawcircle',
-  'ledmatrix_init', 'ledmatrix_rotation', 'ledmatrix_clear',
-  'ledmatrix_drawbitmap', 'ledmatrix_drawsprite', 'ledmatrix_drawpixel',
-  'ledmatrix_drawline', 'ledmatrix_drawrectangle', 'ledmatrix_drawcircle',
-  'ledmatrix_drawtext', 'ledmatrix_drawmatrix',
-  'neopixel_init', 'neopixel_setbrightness', 'neopixel_clear',
-  'neopixel_setled', 'neopixel_setledxy', 'neopixel_setled2',
-  'neopixel_setled2xy', 'neopixel_setdata', 'neopixel_show'
-];
-displayBlocks.forEach(function(name) {
-  if (!Blockly.Blocks[name]) {
-    Blockly.Blocks[name] = {
-      init: function() {
-        this.appendDummyInput().appendField(name.replace(/_/g, ' '));
+
+Blockly.Blocks['lcd2_begin_i2c'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD I2C Iniciar')
+            .appendField(new Blockly.FieldDropdown([['0x27', '0x27'], ['0x3F', '0x3F'], ['0x20', '0x20']]), 'ADDR');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
         this.setColour(130);
-        this.setTooltip('Display block (stub)');
-      }
-    };
-  }
-});
+        this.setTooltip('Inicializar LCD I2C');
+    }
+};
+
+Blockly.Blocks['lcd2_clear'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Limpiar');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Limpiar pantalla LCD');
+    }
+};
+
+Blockly.Blocks['lcd2_print'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Imprimir')
+            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1']]), 'CURSOR_ROW')
+            .appendField('col')
+            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'], ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13'], ['14', '14'], ['15', '15']]), 'CURSOR_COLUMN');
+        this.appendValueInput('STRINGOUTPUT')
+            .setCheck('String')
+            .appendField('texto');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Imprimir en LCD');
+    }
+};
+
+Blockly.Blocks['lcd2_print_customchar'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Caracter Custom')
+            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1']]), 'CURSOR_ROW')
+            .appendField('col')
+            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'], ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13'], ['14', '14'], ['15', '15']]), 'CURSOR_COLUMN');
+        this.appendValueInput('STRINGOUTPUT')
+            .setCheck('String')
+            .appendField('texto');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Imprimir caracter custom en LCD');
+    }
+};
+
+Blockly.Blocks['lcd2_print2'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Imprimir');
+        this.appendValueInput('CURSOR_COLUMN')
+            .setCheck('Number')
+            .appendField('col');
+        this.appendValueInput('CURSOR_ROW')
+            .setCheck('Number')
+            .appendField('fila');
+        this.appendValueInput('STRINGOUTPUT')
+            .setCheck('String')
+            .appendField('texto');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Imprimir en LCD');
+    }
+};
+
+Blockly.Blocks['lcd2_print2_customchar'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Caracter Custom');
+        this.appendValueInput('CURSOR_COLUMN')
+            .setCheck('Number')
+            .appendField('col');
+        this.appendValueInput('CURSOR_ROW')
+            .setCheck('Number')
+            .appendField('fila');
+        this.appendValueInput('STRINGOUTPUT')
+            .setCheck('String')
+            .appendField('texto');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Imprimir caracter custom en LCD');
+    }
+};
+
+Blockly.Blocks['lcd2_backlight'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Retroiluminación')
+            .appendField(new Blockly.FieldDropdown([['ENCENDIDO', 'true'], ['APAGADO', 'false']]), 'STATE');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Controlar retroiluminación LCD');
+    }
+};
+
+Blockly.Blocks['lcd2_cursor'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Cursor')
+            .appendField(new Blockly.FieldDropdown([['MOSTRAR', 'show'], ['OCULTAR', 'noCursor'], ['BLOQUEO', 'blink'], ['SIN BLOQUEO', 'noBlink']]), 'MODE');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Mostrar/ocultar cursor LCD');
+    }
+};
+
+Blockly.Blocks['lcd2_display'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Display')
+            .appendField(new Blockly.FieldDropdown([['ENCENDIDO', 'true'], ['APAGADO', 'false']]), 'STATE');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Encender/apagar display LCD');
+    }
+};
+
+Blockly.Blocks['lcd2_scroll'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Scroll')
+            .appendField(new Blockly.FieldDropdown([['IZQUIQUIA', 'scrollLeft'], ['DERECHA', 'scrollRight']]), 'DIRECTION');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Scroll del LCD');
+    }
+};
+
+Blockly.Blocks['lcd2_customchar'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('LCD Custom Char')
+            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7']]), 'POSITION');
+        this.appendValueInput('DATA')
+            .setCheck('Array')
+            .appendField('datos');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(130);
+        this.setTooltip('Definir caracter custom');
+    }
+};
+
+// ===================== OLED =====================
+Blockly.Blocks['oled_init'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Iniciar');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+        this.setTooltip('Inicializar pantalla OLED');
+    }
+};
+Blockly.Blocks['oled_rotation'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Rotación')
+            .appendField(new Blockly.FieldDropdown([['0°', '0'], ['90°', '1'], ['180°', '2'], ['270°', '3']]), 'ROTATION');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+    }
+};
+Blockly.Blocks['oled_clear'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Limpiar');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+    }
+};
+Blockly.Blocks['oled_show'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Mostrar');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+    }
+};
+Blockly.Blocks['oled_drawtext'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Texto');
+        this.appendValueInput('X').setCheck('Number').appendField('X');
+        this.appendValueInput('Y').setCheck('Number').appendField('Y');
+        this.appendValueInput('TXT').setCheck('String').appendField('texto');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+    }
+};
+Blockly.Blocks['oled_drawbitmap'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Bitmap');
+        this.appendValueInput('X').setCheck('Number').appendField('X');
+        this.appendValueInput('Y').setCheck('Number').appendField('Y');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+    }
+};
+Blockly.Blocks['oled_drawpixel'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Pixel');
+        this.appendValueInput('X').setCheck('Number').appendField('X');
+        this.appendValueInput('Y').setCheck('Number').appendField('Y');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+    }
+};
+Blockly.Blocks['oled_drawline'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Línea');
+        this.appendValueInput('X1').setCheck('Number').appendField('X1');
+        this.appendValueInput('Y1').setCheck('Number').appendField('Y1');
+        this.appendValueInput('X2').setCheck('Number').appendField('X2');
+        this.appendValueInput('Y2').setCheck('Number').appendField('Y2');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+    }
+};
+Blockly.Blocks['oled_drawrectangle'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Rectángulo');
+        this.appendValueInput('X1').setCheck('Number').appendField('X1');
+        this.appendValueInput('Y1').setCheck('Number').appendField('Y1');
+        this.appendValueInput('X2').setCheck('Number').appendField('X2');
+        this.appendValueInput('Y2').setCheck('Number').appendField('Y2');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+    }
+};
+Blockly.Blocks['oled_drawcircle'] = {
+    init: function() {
+        this.appendDummyInput().appendField('OLED Círculo');
+        this.appendValueInput('X').setCheck('Number').appendField('X');
+        this.appendValueInput('Y').setCheck('Number').appendField('Y');
+        this.appendValueInput('R').setCheck('Number').appendField('R');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+    }
+};
+
+// ===================== LED MATRIX =====================
+Blockly.Blocks['ledmatrix_init'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Iniciar');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_rotation'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Rotación')
+            .appendField(new Blockly.FieldDropdown([['0°', '0'], ['90°', '1'], ['180°', '2'], ['270°', '3']]), 'ROTATION');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_clear'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Limpiar');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_drawbitmap'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Bitmap');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_drawsprite'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Sprite');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_drawpixel'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Pixel');
+        this.appendValueInput('X').setCheck('Number').appendField('X');
+        this.appendValueInput('Y').setCheck('Number').appendField('Y');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_drawline'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Línea');
+        this.appendValueInput('X1').setCheck('Number').appendField('X1');
+        this.appendValueInput('Y1').setCheck('Number').appendField('Y1');
+        this.appendValueInput('X2').setCheck('Number').appendField('X2');
+        this.appendValueInput('Y2').setCheck('Number').appendField('Y2');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_drawrectangle'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Rectángulo');
+        this.appendValueInput('X1').setCheck('Number').appendField('X1');
+        this.appendValueInput('Y1').setCheck('Number').appendField('Y1');
+        this.appendValueInput('X2').setCheck('Number').appendField('X2');
+        this.appendValueInput('Y2').setCheck('Number').appendField('Y2');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_drawcircle'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Círculo');
+        this.appendValueInput('X').setCheck('Number').appendField('X');
+        this.appendValueInput('Y').setCheck('Number').appendField('Y');
+        this.appendValueInput('R').setCheck('Number').appendField('R');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_drawtext'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Texto');
+        this.appendValueInput('X').setCheck('Number').appendField('X');
+        this.appendValueInput('Y').setCheck('Number').appendField('Y');
+        this.appendValueInput('TXT').setCheck('String').appendField('texto');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+Blockly.Blocks['ledmatrix_drawmatrix'] = {
+    init: function() {
+        this.appendDummyInput().appendField('LedMatrix Matriz');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(390);
+    }
+};
+
+// ===================== NEOPIXEL =====================
+Blockly.Blocks['neopixel_init'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('NeoPixel Iniciar')
+            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'], ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13']]), 'PIN');
+        this.appendValueInput('LEDCOUNT').setCheck('Number').appendField('led');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(210);
+    }
+};
+Blockly.Blocks['neopixel_setbrightness'] = {
+    init: function() {
+        this.appendDummyInput().appendField('NeoPixel Brillo');
+        this.appendValueInput('BRIGHTNESS').setCheck('Number').appendField('brillo');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(210);
+    }
+};
+Blockly.Blocks['neopixel_clear'] = {
+    init: function() {
+        this.appendDummyInput().appendField('NeoPixel Limpiar');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(210);
+    }
+};
+Blockly.Blocks['neopixel_setled'] = {
+    init: function() {
+        this.appendDummyInput().appendField('NeoPixel LED');
+        this.appendValueInput('LEDNUMBER').setCheck('Number').appendField('nº');
+        this.appendValueInput('R').setCheck('Number').appendField('R');
+        this.appendValueInput('G').setCheck('Number').appendField('G');
+        this.appendValueInput('B').setCheck('Number').appendField('B');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(210);
+    }
+};
+Blockly.Blocks['neopixel_setledxy'] = {
+    init: function() {
+        this.appendDummyInput().appendField('NeoPixel LED XY');
+        this.appendValueInput('X').setCheck('Number').appendField('X');
+        this.appendValueInput('Y').setCheck('Number').appendField('Y');
+        this.appendValueInput('R').setCheck('Number').appendField('R');
+        this.appendValueInput('G').setCheck('Number').appendField('G');
+        this.appendValueInput('B').setCheck('Number').appendField('B');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(210);
+    }
+};
+Blockly.Blocks['neopixel_setled2'] = {
+    init: function() {
+        this.appendDummyInput().appendField('NeoPixel LED 2');
+        this.appendValueInput('LEDNUMBER').setCheck('Number').appendField('nº');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(210);
+    }
+};
+Blockly.Blocks['neopixel_setled2xy'] = {
+    init: function() {
+        this.appendDummyInput().appendField('NeoPixel LED 2 XY');
+        this.appendValueInput('X').setCheck('Number').appendField('X');
+        this.appendValueInput('Y').setCheck('Number').appendField('Y');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(210);
+    }
+};
+Blockly.Blocks['neopixel_setdata'] = {
+    init: function() {
+        this.appendDummyInput().appendField('NeoPixel Datos');
+        this.appendFieldInput('DATA');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(210);
+    }
+};
+Blockly.Blocks['neopixel_show'] = {
+    init: function() {
+        this.appendDummyInput().appendField('NeoPixel Mostrar');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(210);
+    }
+};
 
 // ===================== COMMUNICATIONS =====================
 var commBlocks = [

@@ -19,11 +19,11 @@ Code.buildToolbox = function() {
 	var boardSelected = Code.getStringParamFromUrl('board', '');
 	if (toolboxIds === undefined || toolboxIds === "") {
 		if (boardSelected) {
-			toolboxIds = 'LOGIC,CONTROL,MATH,TEXT,VARIABLES,LISTAS,FUNCTIONS,IO,SENSORS,ACTUATORS,MOTOR,TIME,BOARD';
+			toolboxIds = 'LOGIC,CONTROL,MATH,TEXT,VARIABLES,LISTAS,FUNCTIONS,IO,SENSORS,ACTUATORS,MOTOR,TIME,DISPLAY,BOARD';
 			window.localStorage.defaultToolbox = 1;
 		}
 		else {
-			toolboxIds = 'LOGIC,CONTROL,MATH,TEXT,VARIABLES,LISTAS,FUNCTIONS,TIME';
+			toolboxIds = 'LOGIC,CONTROL,MATH,TEXT,VARIABLES,LISTAS,FUNCTIONS,TIME,DISPLAY';
 			window.localStorage.defaultToolbox = 0;
 		}
 	} else {
