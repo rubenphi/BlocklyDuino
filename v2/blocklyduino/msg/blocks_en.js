@@ -128,3 +128,11 @@ Blockly.Msg.RELAY_MOSFET_TEXT = "MOSFET transistor";
 Blockly.Msg.RELAY_MOSFET_INPUT = "on pin#";
 Blockly.Msg.RELAY_MOSFET_TOOLTIP = "the MOSFET transistor is a remote switch, a switch in a power circuit that is switched by a digital signal";
 Blockly.Msg.RELAY_MOSFET_HELPURL = "http://sin.lyceeleyguescouffignal.fr/irf520-mosfet-driver-module";
+
+//Structural blocks (setup/loop)
+Blockly.Msg.ARDUINO_SETUP_TITLE = "al iniciar";
+Blockly.Msg.ARDUINO_SETUP_TOOLTIP = "Code placed here runs once when the Arduino starts";
+Blockly.Msg.ARDUINO_SETUP_HELPURL = "https://www.arduino.cc/reference/en/language/structure/sketch/voidsetup/";
+Blockly.Msg.ARDUINO_LOOP_TITLE = "siempre";
+Blockly.Msg.ARDUINO_LOOP_TOOLTIP = "Code placed here runs repeatedly in a loop";
+Blockly.Msg.ARDUINO_LOOP_HELPURL = "https://www.arduino.cc/reference/en/language/structure/sketch/voidloop/";

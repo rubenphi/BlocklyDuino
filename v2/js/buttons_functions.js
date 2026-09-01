@@ -110,9 +110,14 @@ Code.boardsListModalShow = function () {
         document.getElementById("boardDescriptionSelector").options[i].style.backgroundColor = 'white';
     var boardValue = document.getElementById("boardMenu").value;
     if (boardValue !== 'none') {
-        document.getElementById("boardDescriptionSelector").selectedIndex = boardValue;
-        document.getElementById("boardDescriptionSelector").value = boardValue;
-        document.getElementById("boardDescriptionSelector").options[document.getElementById("boardDescriptionSelector").selectedIndex].style.backgroundColor = 'yellow';
+        var selector = document.getElementById("boardDescriptionSelector");
+        for (var i = 0; i < selector.options.length; i++) {
+            if (selector.options[i].value === boardValue) {
+                selector.selectedIndex = i;
+                selector.options[i].style.backgroundColor = 'yellow';
+                break;
+            }
+        }
     }
     window.addEventListener('click', Code.boardsListModalHide, 'once');
     Code.boardDescription();

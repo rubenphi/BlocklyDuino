@@ -109,6 +109,8 @@ Blockly.Arduino.init = function (workspace) {
     Blockly.Arduino.functionNames_ = Object.create(null);
     // Create a dictionary of setups to be printed in the setup() function
     Blockly.Arduino.setups_ = Object.create(null);
+    // Store custom loop code from board_loop block (null if not used)
+    Blockly.Arduino.loopCode_ = null;
 
     if (!Blockly.Arduino.variableDB_) {
         Blockly.Arduino.variableDB_ =
@@ -183,17 +185,19 @@ Blockly.Arduino.finish = function (code) {
     if (userSetupCode) {
         setups.push(userSetupCode);
     }
+    var loopCode = (Blockly.Arduino.loopCode_ !== null) ? Blockly.Arduino.loopCode_ : code;
     delete Blockly.Arduino.includes_;
     delete Blockly.Arduino.definitions_;
     delete Blockly.Arduino.codeFunctions_;
     delete Blockly.Arduino.userFunctions_;
     delete Blockly.Arduino.functionNames_;
     delete Blockly.Arduino.setups_;
+    delete Blockly.Arduino.loopCode_;
     delete Blockly.Arduino.pins_;
     Blockly.Arduino.variableDB_.reset();
     var allDefs = includes.join('\n') + definitions.join('\n') + variables.join('\n') + functions.join('\n');
     var setup = 'void setup() {' + setups.join('\n  ') + '\n}\n\n';
-    var loop = 'void loop() {\n  ' + code.replace(/\n/g, '\n  ') + '\n}';
+    var loop = 'void loop() {\n  ' + loopCode.replace(/\n/g, '\n  ') + '\n}';
     return allDefs + setup + loop;
 };
 

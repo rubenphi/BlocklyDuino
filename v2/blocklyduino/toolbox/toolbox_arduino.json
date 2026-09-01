@@ -10,7 +10,25 @@ var toolbox_arduino = {
 		"cssConfig": {
 		  "icon": "customIcon fas fa-microchip"
 		},
-         "contents": [{
+         "contents": [
+            {
+               "kind": "category",
+               "name": "%{BKY_CAT_BOARD_STRUCTURAL}",
+               "level": "2",
+               "levels": "1,2,3",
+               "categorystyle": "arduino_category",
+               "contents": [
+                  {
+                     "kind": "block",
+                     "type": "board_setup"
+                  },
+                  {
+                     "kind": "block",
+                     "type": "board_loop"
+                  }
+               ]
+            },
+            {
                "kind": "category",
                "name": "%{BKY_CAT_BOARD_IO}",
 				"level": "2",

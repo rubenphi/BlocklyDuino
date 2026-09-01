@@ -54,7 +54,7 @@ Code.setBoard = function () {
  */
 Code.changeBoard = function ()  {
     var boardMenu = document.getElementById('boardDescriptionSelector');
-    var newBoard = encodeURIComponent(boardMenu.options[boardMenu.selectedIndex].value);
+    var newBoard = boardMenu.value;
     var search = window.location.search;
     if (search.length <= 1) {
         search = '?board=' + newBoard;
@@ -64,20 +64,18 @@ Code.changeBoard = function ()  {
         search = search.replace(/\?/, '?board=' + newBoard + '&');
     }
     profile["default"] = profile[newBoard][0];
-	document.getElementById("boardDescriptionSelector").selectedIndex = newBoard;
-	document.getElementById("boardDescriptionSelector").value = newBoard;
+	document.getElementById('boardMenu').value = newBoard;
 	document.getElementById("boardSelected_span").textContent = profile["default"].description;
 	document.getElementById("portSelected_span").textContent = ' : ' + document.getElementById('serialMenu').options[document.getElementById('serialMenu').selectedIndex].value;
 	window.history.pushState({}, "blocklyduino", window.location.host + window.location.pathname + search);
-	// "reboot" elements
+	// close modal first
 	document.getElementById('overlayForModals').style.display = "none";
 	document.getElementById('boardListModal').classList.remove('show');
 	Code.setBoard();
 	Code.buildToolbox();
 	var xml = Blockly.Xml.workspaceToDom(Code.workspace);
 	Blockly.Xml.domToWorkspace(xml, Code.workspace);
-}
-;
+};
 
 /**
  * Set COM port

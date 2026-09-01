@@ -293,3 +293,146 @@ Blockly.Blocks['math_random_int'] = {
         });
     }
 };
+
+Blockly.Blocks['math_number_hex'] = {
+    init: function () {
+        this.appendDummyInput()
+                .appendField('0x')
+                .appendField(new Blockly.FieldTextInput('00', function (text) {
+                    text = text.replace(/[^0-9a-fA-F]/g, '');
+                    return text;
+                }), 'NUM');
+        this.setOutput(true, 'Number');
+        this.setStyle('math_blocks');
+        this.setTooltip('Número hexadecimal (0x00 - 0xFF)');
+    }
+};
+
+Blockly.Blocks['math_angle'] = {
+    init: function () {
+        this.appendDummyInput()
+                .appendField('ángulo')
+                .appendField(new Blockly.FieldAngle(90), 'ANGLE');
+        this.setOutput(true, 'Number');
+        this.setStyle('math_blocks');
+        this.setTooltip('Ángulo en grados (0-360)');
+    }
+};
+
+Blockly.Blocks['math_atan2'] = {
+    init: function () {
+        this.appendValueInput('X')
+                .setCheck('Number')
+                .appendField('atan2 de');
+        this.appendValueInput('Y')
+                .setCheck('Number')
+                .appendField('y');
+        this.setInputsInline(true);
+        this.setOutput(true, 'Number');
+        this.setStyle('math_blocks');
+        this.setTooltip('Arcotangente de Y/X en radianes');
+    }
+};
+
+Blockly.Blocks['math_isnan'] = {
+    init: function () {
+        this.appendValueInput('NUM')
+                .setCheck('Number')
+                .appendField('¿es NaN?');
+        this.setOutput(true, 'Boolean');
+        this.setStyle('math_blocks');
+        this.setTooltip('Verifica si el número es NaN (Not a Number)');
+    }
+};
+
+Blockly.Blocks['math_map'] = {
+    init: function () {
+        this.appendValueInput('VALUE')
+                .setCheck('Number')
+                .appendField('mapear');
+        this.appendValueInput('FROMLOW')
+                .setCheck('Number')
+                .appendField('desde bajo');
+        this.appendValueInput('FROMHIGH')
+                .setCheck('Number')
+                .appendField('desde alto');
+        this.appendValueInput('TOLOW')
+                .setCheck('Number')
+                .appendField('hasta bajo');
+        this.appendValueInput('TOHIGH')
+                .setCheck('Number')
+                .appendField('hasta alto');
+        this.setInputsInline(true);
+        this.setOutput(true, 'Number');
+        this.setStyle('math_blocks');
+        this.setTooltip('Mapea un valor de un rango a otro');
+    }
+};
+
+Blockly.Blocks['math_to_int'] = {
+    init: function () {
+        this.appendValueInput('NUM')
+                .setCheck('Number')
+                .appendField('convertir a entero');
+        this.setOutput(true, 'Number');
+        this.setStyle('math_blocks');
+        this.setTooltip('Convierte a entero (int)');
+    }
+};
+
+Blockly.Blocks['math_to_uint'] = {
+    init: function () {
+        this.appendValueInput('NUM')
+                .setCheck('Number')
+                .appendField('convertir a entero sin signo');
+        this.setOutput(true, 'Number');
+        this.setStyle('math_blocks');
+        this.setTooltip('Convierte a entero sin signo (unsigned int)');
+    }
+};
+
+Blockly.Blocks['math_bitwise'] = {
+    init: function () {
+        this.appendValueInput('A')
+                .setCheck('Number');
+        this.appendDummyInput()
+                .appendField(new Blockly.FieldDropdown([
+                    ['AND', 'AND'],
+                    ['OR', 'OR'],
+                    ['XOR', 'XOR'],
+                    ['NOT', 'NOT'],
+                    ['<<', 'LSHIFT'],
+                    ['>>', 'RSHIFT']
+                ]), 'OP');
+        this.appendValueInput('B')
+                .setCheck('Number');
+        this.setInputsInline(true);
+        this.setOutput(true, 'Number');
+        this.setStyle('math_blocks');
+        this.setTooltip('Operación bitwise');
+    }
+};
+
+Blockly.Blocks['filter_median_add'] = {
+    init: function () {
+        this.appendValueInput('VALUE')
+                .setCheck('Number')
+                .appendField('filtro mediana agregar');
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setStyle('math_blocks');
+        this.setTooltip('Agrega un valor al filtro de mediana');
+    }
+};
+
+Blockly.Blocks['filter_median_window'] = {
+    init: function () {
+        this.appendValueInput('WINDOW')
+                .setCheck('Number')
+                .appendField('filtro mediana ventana');
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setStyle('math_blocks');
+        this.setTooltip('Configura el tamaño de ventana del filtro de mediana');
+    }
+};

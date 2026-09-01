@@ -297,6 +297,7 @@
                             <option value="arduino_uno">Arduino Uno</option>
                             <option value="arduino_yun">Arduino Yùn</option>
                             <option value="lilypad">LilyPad</option>
+                            <option value="esp32_devkit">ESP32 DevKit V1</option>
                         </select>
                         <br>
                         <span id="languageSpan" class="UIText">...</span>
@@ -507,6 +508,7 @@
                             	<option value="arduino_uno">Arduino Uno</option>
                             	<option value="arduino_yun">Arduino Yùn</option>
                             	<option value="lilypad">LilyPad</option>
+                            	<option value="esp32_devkit">ESP32 DevKit V1</option>
                             </optgroup>
                         </select>
                     </div>
@@ -571,12 +573,7 @@
     <script src="./@blockly/demos/keyboard_nav/line_cursor.js" async></script>
     <script src="./@blockly/tests/playgrounds/screenshot.js" async></script>
     <!-- BlocklyDuino external toolbox hacked -->
-    <script src="./blocklyduino/toolbox/toolbox_arduino.json"></script>
-    <script src="./blocklyduino/toolbox/toolbox_ds18b20.json"></script>
-    <script src="./blocklyduino/toolbox/toolbox_grove.json"></script>
-    <script src="./blocklyduino/toolbox/toolbox_relay.json"></script>
-    <script src="./blocklyduino/toolbox/toolbox_servo.json"></script>
-    <script src="./blocklyduino/toolbox/toolbox_standard.json"></script>
+    <script src="./blocklyduino/toolbox/toolbox_unified.json"></script>
     <!-- Blockly libraries of function, hacked from different demos -->
     <script src="./js/blockly/keyboard_nav.js"></script>
     <script src="./js/blockly/playground.js"></script>
@@ -599,13 +596,17 @@
     <!-- <script src="./blocklyduino/blocks/blocks_colors.js" async></script> -->
     <script src="./blocklyduino/blocks/board/board_base.js" async></script>
     <script src="./blocklyduino/blocks/board/board_serial.js" async></script>
+    <script src="./blocklyduino/blocks/board/board_structural.js" async></script>
     <script src="./blocklyduino/blocks/blockly/logic.js" async></script>
     <script src="./blocklyduino/blocks/blockly/math.js" async></script>
+    <script src="./blocklyduino/blocks/blockly/text.js"></script>
     <script src="./blocklyduino/blocks/ds18b20/ds18b20.js" async></script>
     <script src="./blocklyduino/blocks/grove/grove.js" async></script>
     <script src="./blocklyduino/blocks/relay/relay.js" async></script>
     <script src="./blocklyduino/blocks/servo/servo.js" async></script>
     <script src="./blocklyduino/blocks/typed_variable.js" async></script>
+    <script src="./blocklyduino/blocks/time/time.js"></script>
+    <script src="./blocklyduino/blocks/blocks_stub.js" async></script>
     <!-- blocklyduino specific: common generator code -->
     <script src="./generators/arduino_generator.js"></script>
     <script src="./blocklyduino/arduino/blockly/colour.js" async></script>
@@ -615,9 +616,11 @@
     <script src="./blocklyduino/arduino/blockly/math.js" async></script>
     <script src="./blocklyduino/arduino/blockly/procedures.js" async></script>
     <script src="./blocklyduino/arduino/blockly/text.js" async></script>
+    <script src="./blocklyduino/arduino/blockly/time.js" async></script>
     <!-- blocklyduino specific: addon generator code -->
     <script src="./blocklyduino/arduino/board/board_base.js" async></script>
     <script src="./blocklyduino/arduino/board/board_serial.js" async></script>
+    <script src="./blocklyduino/arduino/board/board_structural.js" async></script>
     <script src="./blocklyduino/arduino/typed_variable.js" async></script>
     <script src="./blocklyduino/arduino/addon/ds18b20.js" async></script>
     <script src="./blocklyduino/arduino/addon/grove.js" async></script>
@@ -653,10 +656,13 @@
         });
         editor.findNext();
         editor.findPrevious();
-        <!-- require('../CLI_functions.js'); -->
-        <!-- require('../IDE_functions.js'); -->
-        require('../resources/app.asar/CLI_functions.js');
-        require('../resources/app.asar/IDE_functions.js');
-        require('../nodejs/js/webServer.js');
+        // require('../CLI_functions.js');
+        // require('../IDE_functions.js');
+        // Electron-only: only load these when running inside Electron (require is defined)
+        if (typeof require !== 'undefined') {
+            require('../resources/app.asar/CLI_functions.js');
+            require('../resources/app.asar/IDE_functions.js');
+            require('../nodejs/js/webServer.js');
+        }
     </script>
 </HTML>

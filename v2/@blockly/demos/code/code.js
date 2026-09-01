@@ -60,8 +60,12 @@ Code.getStringParamFromUrl = function(name, defaultValue) {
 Code.getLang = function() {
   var lang = Code.getStringParamFromUrl('lang', '');
   if (Code.LANGUAGE_NAME[lang] === undefined) {
-    // Default to English.
-    lang = 'en';
+    // Detect browser language, fallback to English.
+    var browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    if (browserLang.length >= 2) {
+      browserLang = browserLang.substring(0, 2);
+    }
+    lang = (Code.LANGUAGE_NAME[browserLang] !== undefined) ? browserLang : 'en';
   }
   return lang;
 };

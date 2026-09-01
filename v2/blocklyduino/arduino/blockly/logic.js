@@ -132,3 +132,22 @@ Blockly.Arduino['controls_switch'] = function (block) {
     code += '}'
     return code + '\n';
 };
+
+Blockly.Arduino['logic_compare_bool'] = function (block) {
+    var OPERATORS = {
+        'EQ': '==',
+        'NEQ': '!='
+    };
+    var operator = OPERATORS[block.getFieldValue('OP')];
+    var order = (operator == '==') ?
+            Blockly.Arduino.ORDER_EQUALITY : Blockly.Arduino.ORDER_RELATIONAL;
+    var argument0 = Blockly.Arduino.valueToCode(block, 'A', order) || 'false';
+    var argument1 = Blockly.Arduino.valueToCode(block, 'B', order) || 'false';
+    var code = argument0 + ' ' + operator + ' ' + argument1;
+    return [code, order];
+};
+
+Blockly.Arduino['logic_boolean2'] = function (block) {
+    var code = (block.getFieldValue('BOOL') == 'TRUE') ? 'HIGH' : 'LOW';
+    return [code, Blockly.Arduino.ORDER_ATOMIC];
+};

@@ -17,6 +17,7 @@ Blockly.Msg.CAT_VAR_BOOLEAN = "boolean";
 Blockly.Msg.CAT_BOARD = "Arduino";
 Blockly.Msg.CAT_BOARD_IO = "Entrada / Salida";
 Blockly.Msg.CAT_BOARD_SERIAL = "Serial communication";
+Blockly.Msg.CAT_BOARD_STRUCTURAL = "Estructura";
 Blockly.Msg.CAT_IKS01A3 = "X-NUCLEO-IKS01A3";
 Blockly.Msg.CAT_SERVO = "Servo";
 Blockly.Msg.CAT_SEEED = "Seeed studio";

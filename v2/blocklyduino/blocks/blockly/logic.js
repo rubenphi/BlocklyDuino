@@ -269,3 +269,31 @@ Blockly.Blocks['controls_case_default'] = {
         this.contextMenu = false;
     }
 };
+
+Blockly.Blocks['logic_compare_bool'] = {
+    init: function () {
+        this.appendValueInput('A');
+        this.appendValueInput('B')
+                .appendField(new Blockly.FieldDropdown([
+                    ['==', 'EQ'],
+                    ['!=', 'NEQ']
+                ]), 'OP');
+        this.setInputsInline(true);
+        this.setOutput(true, 'Boolean');
+        this.setStyle('logic_blocks');
+        this.setTooltip('Comparar dos valores booleanos');
+    }
+};
+
+Blockly.Blocks['logic_boolean2'] = {
+    init: function () {
+        this.appendDummyInput()
+                .appendField(new Blockly.FieldDropdown([
+                    ['HIGH', 'TRUE'],
+                    ['LOW', 'FALSE']
+                ]), 'BOOL');
+        this.setOutput(true, 'Boolean');
+        this.setStyle('logic_blocks');
+        this.setTooltip('Valor booleano HIGH/LOW');
+    }
+};

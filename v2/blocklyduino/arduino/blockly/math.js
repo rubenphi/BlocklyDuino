@@ -208,3 +208,94 @@ Blockly.Arduino['math_random_int'] = function (block) {
     var code = functionName + '(' + argument0 + ', ' + argument1 + ')';
     return [code, Blockly.Arduino.ORDER_FUNCTION_CALL];
 };
+
+Blockly.Arduino['math_number_hex'] = function (block) {
+    var code = '0x' + block.getFieldValue('NUM');
+    return [code, Blockly.Arduino.ORDER_ATOMIC];
+};
+
+Blockly.Arduino['math_angle'] = function (block) {
+    var code = block.getFieldValue('ANGLE');
+    return [code, Blockly.Arduino.ORDER_ATOMIC];
+};
+
+Blockly.Arduino['math_atan2'] = function (block) {
+    var argument0 = Blockly.Arduino.valueToCode(block, 'X',
+            Blockly.Arduino.ORDER_COMMA) || '0';
+    var argument1 = Blockly.Arduino.valueToCode(block, 'Y',
+            Blockly.Arduino.ORDER_COMMA) || '0';
+    var code = 'atan2(' + argument0 + ', ' + argument1 + ')';
+    return [code, Blockly.Arduino.ORDER_FUNCTION_CALL];
+};
+
+Blockly.Arduino['math_isnan'] = function (block) {
+    var argument0 = Blockly.Arduino.valueToCode(block, 'NUM',
+            Blockly.Arduino.ORDER_MEMBER) || '0';
+    var code = 'isnan(' + argument0 + ')';
+    return [code, Blockly.Arduino.ORDER_FUNCTION_CALL];
+};
+
+Blockly.Arduino['math_map'] = function (block) {
+    var value = Blockly.Arduino.valueToCode(block, 'VALUE',
+            Blockly.Arduino.ORDER_COMMA) || '0';
+    var fromLow = Blockly.Arduino.valueToCode(block, 'FROMLOW',
+            Blockly.Arduino.ORDER_COMMA) || '0';
+    var fromHigh = Blockly.Arduino.valueToCode(block, 'FROMHIGH',
+            Blockly.Arduino.ORDER_COMMA) || '1023';
+    var toLow = Blockly.Arduino.valueToCode(block, 'TOLOW',
+            Blockly.Arduino.ORDER_COMMA) || '0';
+    var toHigh = Blockly.Arduino.valueToCode(block, 'TOHIGH',
+            Blockly.Arduino.ORDER_COMMA) || '255';
+    var code = 'map(' + value + ', ' + fromLow + ', ' + fromHigh + ', ' + toLow + ', ' + toHigh + ')';
+    return [code, Blockly.Arduino.ORDER_FUNCTION_CALL];
+};
+
+Blockly.Arduino['math_to_int'] = function (block) {
+    var argument0 = Blockly.Arduino.valueToCode(block, 'NUM',
+            Blockly.Arduino.ORDER_MEMBER) || '0';
+    var code = '(int)(' + argument0 + ')';
+    return [code, Blockly.Arduino.ORDER_ATOMIC];
+};
+
+Blockly.Arduino['math_to_uint'] = function (block) {
+    var argument0 = Blockly.Arduino.valueToCode(block, 'NUM',
+            Blockly.Arduino.ORDER_MEMBER) || '0';
+    var code = '(unsigned int)(' + argument0 + ')';
+    return [code, Blockly.Arduino.ORDER_ATOMIC];
+};
+
+Blockly.Arduino['math_bitwise'] = function (block) {
+    var OPERATORS = {
+        'AND': [' & ', Blockly.Arduino.ORDER_BITWISE_AND],
+        'OR': [' | ', Blockly.Arduino.ORDER_BITWISE_OR],
+        'XOR': [' ^ ', Blockly.Arduino.ORDER_BITWISE_XOR],
+        'LSHIFT': [' << ', Blockly.Arduino.ORDER_SHIFT],
+        'RSHIFT': [' >> ', Blockly.Arduino.ORDER_SHIFT]
+    };
+    var op = block.getFieldValue('OP');
+    if (op === 'NOT') {
+        var argument0 = Blockly.Arduino.valueToCode(block, 'A',
+                Blockly.Arduino.ORDER_UNARY_PREFIX) || '0';
+        var code = '~' + argument0;
+        return [code, Blockly.Arduino.ORDER_UNARY_PREFIX];
+    }
+    var tuple = OPERATORS[op];
+    var operator = tuple[0];
+    var order = tuple[1];
+    var argument0 = Blockly.Arduino.valueToCode(block, 'A', order) || '0';
+    var argument1 = Blockly.Arduino.valueToCode(block, 'B', order) || '0';
+    var code = argument0 + operator + argument1;
+    return [code, order];
+};
+
+Blockly.Arduino['filter_median_add'] = function (block) {
+    var value = Blockly.Arduino.valueToCode(block, 'VALUE',
+            Blockly.Arduino.ORDER_NONE) || '0';
+    return 'medianFilter.add(' + value + ');\n';
+};
+
+Blockly.Arduino['filter_median_window'] = function (block) {
+    var windowSize = Blockly.Arduino.valueToCode(block, 'WINDOW',
+            Blockly.Arduino.ORDER_NONE) || '5';
+    return 'medianFilter.setWindow(' + windowSize + ');\n';
+};

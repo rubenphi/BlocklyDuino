@@ -214,3 +214,37 @@ Blockly.Themes.Dark.blockStyles['relay_blocks'] = {
     "colourSecondary": "#65ACE2",
     "colourTertiary": "#65ACE2"
 };
+//Time blocks
+Blockly.Themes.Classic.blockStyles['time_blocks'] = {
+    "colourPrimary": "#FFB300"
+};
+Blockly.Themes.Modern.blockStyles['time_blocks'] = {
+    "colourPrimary": "#FFB300",
+    "colourSecondary": "#FFB300",
+    "colourTertiary": "#FFB300"
+};
+Blockly.Themes.Deuteranopia.blockStyles['time_blocks'] = {
+    "colourPrimary": "#FFB300",
+    "colourSecondary": "#FFB300",
+    "colourTertiary": "#FFB300"
+};
+Blockly.Themes.Tritanopia.blockStyles['time_blocks'] = {
+    "colourPrimary": "#FFB300",
+    "colourSecondary": "#FFB300",
+    "colourTertiary": "#FFB300"
+};
+Blockly.Themes.Zelos.blockStyles['time_blocks'] = {
+    "colourPrimary": "#FFB300",
+    "colourSecondary": "#FFB300",
+    "colourTertiary": "#FFB300"
+};
+Blockly.Themes.HighContrast.blockStyles['time_blocks'] = {
+    "colourPrimary": "#FFB300",
+    "colourSecondary": "#FFB300",
+    "colourTertiary": "#FFB300"
+};
+Blockly.Themes.Dark.blockStyles['time_blocks'] = {
+    "colourPrimary": "#FFB300",
+    "colourSecondary": "#dbbdd6",
+    "colourTertiary": "#84497a"
+};
