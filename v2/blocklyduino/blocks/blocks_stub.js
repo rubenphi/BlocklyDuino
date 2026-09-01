@@ -62,28 +62,292 @@ espBlocks.forEach(function(name) {
 });
 
 // ===================== IO =====================
-var ioBlocks = [
-  'io_digital_read', 'io_digital_write', 'io_analog_read', 'io_analog_write',
-  'io_analog_write_dac', 'io_digital_read2', 'io_digital_write2',
-  'io_analog_read2', 'io_analog_write2', 'io_pull', 'io_capacitive_read',
-  'io_pulsein', 'io_interrupt',
-  'io_digital_read_i2c', 'io_digital_write_i2c', 'io_digital_read2_i2c',
-  'io_digital_write2_i2c', 'io_analog_read_i2c', 'io_analog_read2_i2c',
-  'io_analog_read_dif_i2c', 'io_i2c_scanner'
-];
-ioBlocks.forEach(function(name) {
-  if (!Blockly.Blocks[name]) {
-    Blockly.Blocks[name] = {
-      init: function() {
-        this.appendDummyInput().appendField(name.replace(/_/g, ' '));
-        this.setColour(230);
-        this.setTooltip('IO block (stub)');
-      }
-    };
-  }
-});
+var _ioDropdown = function(fieldName) {
+    var val = profile.default[fieldName];
+    if (Array.isArray(val) && val.length > 0) {
+        return val;
+    }
+    return [['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'], ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13']];
+};
 
-// ===================== SENSORS =====================
+Blockly.Blocks['io_digital_read'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_READ_INPUT || 'Digital Read')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownDigital'); }), "PIN");
+        this.setOutput(true, 'Boolean');
+        this.setTooltip('Read digital value from a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_digital_write'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT1 || 'Digital Write')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownDigital'); }), "PIN")
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT2 || 'to')
+            .appendField(new Blockly.FieldDropdown(Blockly.Msg.FIELDDROPDOWN), 'STAT');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setTooltip('Write digital value to a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_analog_read'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.ARDUINO_INOUT_ANALOG_READ_INPUT || 'Analog Read')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownAnalog'); }), "PIN");
+        this.setOutput(true, 'int');
+        this.setTooltip('Read analog value from a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_analog_write'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.ARDUINO_INOUT_ANALOG_WRITE_INPUT1 || 'Analog Write')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownPWM'); }), "PIN")
+            .appendField(Blockly.Msg.ARDUINO_INOUT_ANALOG_WRITE_INPUT2 || 'value');
+        this.appendValueInput("NUM", 'Number')
+            .setCheck('Number');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setTooltip('Write analog value to a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_analog_write_dac'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('DAC Write')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownPWM'); }), "PIN");
+        this.appendValueInput("NUM", 'Number')
+            .setCheck('Number');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setTooltip('Write DAC value to a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_digital_read2'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_READ_INPUT || 'Digital Read');
+        this.appendValueInput("PIN")
+            .setCheck('Number')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT1 || 'Pin');
+        this.setOutput(true, 'Boolean');
+        this.setTooltip('Read digital value from a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_digital_write2'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT1 || 'Digital Write');
+        this.appendValueInput("PIN")
+            .setCheck('Number')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT1 || 'Pin');
+        this.appendValueInput("STAT")
+            .setCheck('Boolean')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT2 || 'to');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setTooltip('Write digital value to a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_analog_read2'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.ARDUINO_INOUT_ANALOG_READ_INPUT || 'Analog Read');
+        this.appendValueInput("PIN")
+            .setCheck('Number')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT1 || 'Pin');
+        this.setOutput(true, 'int');
+        this.setTooltip('Read analog value from a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_analog_write2'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.ARDUINO_INOUT_ANALOG_WRITE_INPUT1 || 'Analog Write');
+        this.appendValueInput("PIN")
+            .setCheck('Number')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT1 || 'Pin');
+        this.appendValueInput("NUM")
+            .setCheck('Number')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_ANALOG_WRITE_INPUT2 || 'value');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setTooltip('Write analog value to a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_pull'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('Set Pull')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownDigital'); }), "PIN")
+            .appendField(new Blockly.FieldDropdown([['INPUT_PULLUP', 'INPUT_PULLUP'], ['INPUT', 'INPUT'], ['OUTPUT', 'OUTPUT']]), 'MODE');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setTooltip('Set pull-up/pull-down resistor');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_capacitive_read'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(Blockly.Msg.ARDUINO_INOUT_ANALOG_READ_INPUT || 'Capacitive Read')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownAnalog'); }), "PIN");
+        this.setOutput(true, 'int');
+        this.setTooltip('Read capacitive sensor value');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_pulsein'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('Pulse In')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownDigital'); }), "PIN");
+        this.appendValueInput("TIMEOUT", 'Number')
+            .setCheck('Number')
+            .appendField('timeout');
+        this.setOutput(true, 'int');
+        this.setTooltip('Read pulse width');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_interrupt'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('Interrupt')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownDigital'); }), "PIN")
+            .appendField(new Blockly.FieldDropdown([['RISING', 'RISING'], ['FALLING', 'FALLING'], ['CHANGE', 'CHANGE']]), 'MODE');
+        this.appendStatementInput("DO")
+            .appendField('do');
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setTooltip('Attach interrupt to a pin');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_digital_read_i2c'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('I2C Digital Read')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownDigital'); }), "PIN");
+        this.setOutput(true, 'Boolean');
+        this.setTooltip('Read digital value via I2C');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_digital_write_i2c'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('I2C Digital Write')
+            .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownDigital'); }), "PIN")
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT2 || 'to')
+            .appendField(new Blockly.FieldDropdown(Blockly.Msg.FIELDDROPDOWN), 'STAT');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setTooltip('Write digital value via I2C');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_digital_read2_i2c'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('I2C Digital Read');
+        this.appendValueInput("PIN")
+            .setCheck('Number')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT1 || 'Pin');
+        this.setOutput(true, 'Boolean');
+        this.setTooltip('Read digital value via I2C');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_digital_write2_i2c'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('I2C Digital Write');
+        this.appendValueInput("PIN")
+            .setCheck('Number')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT1 || 'Pin');
+        this.appendValueInput("STAT")
+            .setCheck('Boolean')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT2 || 'to');
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setTooltip('Write digital value via I2C');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_analog_read_i2c'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('I2C Analog Read');
+        this.setOutput(true, 'int');
+        this.setTooltip('Read analog value via I2C');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_analog_read2_i2c'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('I2C Analog Read');
+        this.appendValueInput("PIN")
+            .setCheck('Number')
+            .appendField(Blockly.Msg.ARDUINO_INOUT_DIGITAL_WRITE_INPUT1 || 'Pin');
+        this.setOutput(true, 'int');
+        this.setTooltip('Read analog value via I2C');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_analog_read_dif_i2c'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('I2C Analog Diff Read');
+        this.setOutput(true, 'int');
+        this.setTooltip('Read differential analog via I2C');
+        this.setColour(230);
+    }
+};
+
+Blockly.Blocks['io_i2c_scanner'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField('I2C Scanner');
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+        this.setTooltip('Scan I2C bus');
+        this.setColour(230);
+    }
+};
+
+// Sensor blocks
 var sensorBlocks = [
   'sensor_potentiometer', 'sensor_button', 'sensor_button_debounced',
   'sensor_touch', 'sensor_pir', 'sensor_dht11', 'sensor_dht22',

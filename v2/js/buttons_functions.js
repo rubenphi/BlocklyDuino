@@ -162,10 +162,10 @@ Code.boardDescription = function () {
     if (boardValue === '')
         boardValue = 'none';
     document.getElementById("board_mini_picture").setAttribute("src", profile[boardValue][0]['picture']);
-    document.getElementById("board_connect").textContent = profile[boardValue][0]['usb'];
-    document.getElementById("board_cpu").textContent = profile[boardValue][0]['cpu'];
-    document.getElementById("board_voltage").textContent = profile[boardValue][0]['voltage'];
-    document.getElementById("board_inout").textContent = profile[boardValue][0]['inout'];
+    document.getElementById("boardModal_connect").textContent = profile[boardValue][0]['usb'] || '';
+    document.getElementById("boardModal_cpu").textContent = profile[boardValue][0]['cpu'] || '';
+    document.getElementById("boardModal_voltage").textContent = profile[boardValue][0]['voltage'] || '';
+    document.getElementById("boardModal_inout").textContent = profile[boardValue][0]['inout'] || '';
 };
 
 /**

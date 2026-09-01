@@ -67,7 +67,7 @@ Code.changeBoard = function ()  {
 	document.getElementById('boardMenu').value = newBoard;
 	document.getElementById("boardSelected_span").textContent = profile["default"].description;
 	document.getElementById("portSelected_span").textContent = ' : ' + document.getElementById('serialMenu').options[document.getElementById('serialMenu').selectedIndex].value;
-	window.history.pushState({}, "blocklyduino", window.location.host + window.location.pathname + search);
+	window.history.pushState({}, "blocklyduino", window.location.origin + window.location.pathname + search);
 	// close modal first
 	document.getElementById('overlayForModals').style.display = "none";
 	document.getElementById('boardListModal').classList.remove('show');
