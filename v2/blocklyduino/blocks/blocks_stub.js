@@ -349,14 +349,12 @@ Blockly.Blocks['io_i2c_scanner'] = {
 
 // Sensor blocks
 var sensorBlocks = [
-  'sensor_potentiometer', 'sensor_button', 'sensor_button_debounced',
-  'sensor_touch', 'sensor_pir', 'sensor_dht11', 'sensor_dht22',
+  'sensor_potentiometer',
+  'sensor_dht11', 'sensor_dht22',
   'sensor_ldr', 'sensor_ntc', 'sensor_ultrasonic', 'sensor_rotary_encoder',
-  'sensor_rotary_encoder_set2', 'sensor_joystick', 'sensor_obstacle',
-  'sensor_sound', 'sensor_linetracking', 'sensor_photoint',
-  'sensor_soilhumidity', 'sensor_water', 'sensor_knock', 'sensor_tilt',
-  'sensor_hall', 'sensor_vibration', 'sensor_flame', 'sensor_gas',
-  'sensor_alcohol', 'sensor_TEMT6000', 'sensor_lm35', 'sensor_tmp36',
+  'sensor_rotary_encoder_set2', 'sensor_joystick',
+  'sensor_soilhumidity', 'sensor_water',
+  'sensor_TEMT6000', 'sensor_lm35', 'sensor_tmp36',
   'sensor_nunchuk', 'sensor_pm25', 'sensor_pm_particles',
   'sensor_mics4514', 'sensor_bmp180', 'sensor_bme280', 'sensor_ds18b20',
   'sensor_ccs811', 'sensor_pressure', 'sensor_MLX90614', 'sensor_GUVAS12SD',
@@ -376,6 +374,44 @@ sensorBlocks.forEach(function(name) {
       }
     };
   }
+});
+
+// ===================== Digital sensors =====================
+var sensorDigital = {
+  'sensor_button': { label: 'Pulsador', desc: 'Pulsador simple' },
+  'sensor_button_debounced': { label: 'Pulsador (lógica)', desc: 'Pulsador con lógica simple en código' },
+  'sensor_touch': { label: 'Táctil TTP223', desc: 'Sensor táctil digital, tipo TTP223' },
+  'sensor_pir': { label: 'PIR', desc: 'Detector de movimiento PIR' },
+  'sensor_obstacle': { label: 'Obstáculos', desc: 'Detector de obstáculos infrarrojo con comparador' },
+  'sensor_linetracking': { label: 'Siguelíneas TCRT5000', desc: 'Sensor siguelíneas TCRT5000' },
+  'sensor_photoint': { label: 'Fotointerruptor', desc: 'Fotointerruptor óptico / ranurado' },
+  'sensor_knock': { label: 'Golpe KY-031', desc: 'Sensor de golpe KY-031 o similar' },
+  'sensor_tilt': { label: 'Inclinación SW-520D', desc: 'Sensor de inclinación por canica SW-520D' },
+  'sensor_vibration': { label: 'Vibración SW-420', desc: 'Sensor de vibración SW-420' },
+  'sensor_sound': { label: 'Sonido DO', desc: 'Módulos de sonido con salida digital DO' },
+  'sensor_hall': { label: 'Hall', desc: 'Sensor magnético de efecto Hall en su versión de salida digital' },
+  'sensor_flame': { label: 'Llama DO', desc: 'Detector de llama con salida digital DO' },
+  'sensor_gas': { label: 'Gas MQ', desc: 'Sensores MQ-2/MQ-135 usando su pin digital DO' },
+  'sensor_alcohol': { label: 'Alcohol MQ-3', desc: 'Sensor MQ-3 usando su pin digital DO' }
+};
+
+Object.keys(sensorDigital).forEach(function(name) {
+  Blockly.Blocks[name] = {
+    init: function() {
+      var info = sensorDigital[name];
+      this.setColour(230);
+      this.setTooltip(info.desc);
+      this.appendDummyInput()
+          .appendField(info.label)
+          .appendField(new Blockly.FieldDropdown(function() { return _ioDropdown('dropdownDigital'); }), 'PIN');
+      if (name === 'sensor_button' || name === 'sensor_button_debounced') {
+        this.appendDummyInput()
+            .appendField('Invertir')
+            .appendField(new Blockly.FieldCheckbox('FALSE'), 'INV');
+      }
+      this.setOutput(true, 'Boolean');
+    }
+  };
 });
 
 // ===================== ACTUATORS =====================
@@ -499,10 +535,10 @@ Blockly.Blocks['lcd2_print'] = {
             .appendField('LCD')
             .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
             .appendField('Imprimir')
-            .appendField('Columna')
-            .appendField(new Blockly.FieldDropdown(lcd_colDropdown), 'CURSOR_COLUMN')
             .appendField('Fila')
-            .appendField(new Blockly.FieldDropdown(lcd_rowDropdown), 'CURSOR_ROW');
+            .appendField(new Blockly.FieldDropdown(lcd_rowDropdown), 'CURSOR_ROW')
+            .appendField('Columna')
+            .appendField(new Blockly.FieldDropdown(lcd_colDropdown), 'CURSOR_COLUMN');
         this.appendValueInput('STRINGOUTPUT')
             .setCheck('String')
             .appendField('texto');
@@ -519,10 +555,10 @@ Blockly.Blocks['lcd2_print_customchar'] = {
             .appendField('LCD')
             .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
             .appendField('Imprimir Caracter Custom')
-            .appendField('Columna')
-            .appendField(new Blockly.FieldDropdown(lcd_colDropdown), 'CURSOR_COLUMN')
             .appendField('Fila')
-            .appendField(new Blockly.FieldDropdown(lcd_rowDropdown), 'CURSOR_ROW');
+            .appendField(new Blockly.FieldDropdown(lcd_rowDropdown), 'CURSOR_ROW')
+            .appendField('Columna')
+            .appendField(new Blockly.FieldDropdown(lcd_colDropdown), 'CURSOR_COLUMN');
         this.appendValueInput('STRINGOUTPUT')
             .setCheck('String')
             .appendField('texto');
@@ -539,12 +575,12 @@ Blockly.Blocks['lcd2_print2'] = {
             .appendField('LCD')
             .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
             .appendField('Imprimir');
-        this.appendValueInput('CURSOR_COLUMN')
-            .setCheck('Number')
-            .appendField('Columna');
         this.appendValueInput('CURSOR_ROW')
             .setCheck('Number')
             .appendField('Fila');
+        this.appendValueInput('CURSOR_COLUMN')
+            .setCheck('Number')
+            .appendField('Columna');
         this.appendValueInput('STRINGOUTPUT')
             .setCheck('String')
             .appendField('texto');
@@ -561,12 +597,12 @@ Blockly.Blocks['lcd2_print2_customchar'] = {
             .appendField('LCD')
             .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
             .appendField('Imprimir Caracter Custom');
-        this.appendValueInput('CURSOR_COLUMN')
-            .setCheck('Number')
-            .appendField('Columna');
         this.appendValueInput('CURSOR_ROW')
             .setCheck('Number')
             .appendField('Fila');
+        this.appendValueInput('CURSOR_COLUMN')
+            .setCheck('Number')
+            .appendField('Columna');
         this.appendValueInput('STRINGOUTPUT')
             .setCheck('String')
             .appendField('texto');
@@ -625,7 +661,7 @@ Blockly.Blocks['lcd2_scroll'] = {
             .appendField('LCD')
             .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
             .appendField('Scroll')
-            .appendField(new Blockly.FieldDropdown([['IZQUIERDA', 'scrollLeft'], ['DERECHA', 'scrollRight']]), 'DIRECTION');
+            .appendField(new Blockly.FieldDropdown([['IZQUIERDA', 'scrollDisplayLeft'], ['DERECHA', 'scrollDisplayRight']]), 'DIRECTION');
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(130);
