@@ -15,111 +15,123 @@ goog.provide('Blockly.Arduino.board_display');
 
 goog.require('Blockly.Arduino');
 
-function arduino_lcd_setup(opt_addr) {
+function arduino_lcd_includes() {
     if (!Blockly.Arduino.includes_['Wire']) {
         Blockly.Arduino.includes_['Wire'] = '#include <Wire.h>';
         Blockly.Arduino.includes_['ABlocks_LiquidCrystal_I2C'] = '#include "ABlocks_LiquidCrystal_I2C.h"';
     }
-    var addr = opt_addr || '0x27';
-    Blockly.Arduino.definitions_['lcd_1'] = 'LiquidCrystal_I2C lcd_1(' + addr + ',16,2);';
+}
+
+function arduino_lcd_dims(type) {
+    if (type === '4x20') {
+        return [20, 4];
+    }
+    return [16, 2];
 }
 
 Blockly.Arduino['lcd2_begin_i2c'] = function (block) {
+    var num = block.getFieldValue('NUM');
     var addr = block.getFieldValue('ADDR');
-    arduino_lcd_setup(addr);
-    var code = 'lcd_1.begin();\n';
-    code += 'lcd_1.noCursor();\n';
-    code += 'lcd_1.backlight();\n';
+    var type = block.getFieldValue('TYPE');
+    var dims = arduino_lcd_dims(type);
+    arduino_lcd_includes();
+    Blockly.Arduino.definitions_['lcd_' + num] = 'LiquidCrystal_I2C lcd_' + num + '(' + addr + ',' + dims[0] + ',' + dims[1] + ');';
+    Blockly.Arduino.setups_['setup_lcd_' + num] = 'lcd_' + num + '.begin();\n  lcd_' + num + '.noCursor();\n  lcd_' + num + '.backlight();';
+    var code = '';
     return code;
 };
 
 Blockly.Arduino['lcd2_clear'] = function (block) {
-    arduino_lcd_setup();
-    var code = 'lcd_1.clear();\n';
+    var num = block.getFieldValue('NUM');
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.clear();\n';
     return code;
 };
 
 Blockly.Arduino['lcd2_print'] = function (block) {
-    arduino_lcd_setup();
+    var num = block.getFieldValue('NUM');
     var cursor_row = block.getFieldValue('CURSOR_ROW');
     var cursor_column = block.getFieldValue('CURSOR_COLUMN');
     var stringoutput = Blockly.Arduino.valueToCode(block, 'STRINGOUTPUT', Blockly.Arduino.ORDER_NONE) || '""';
-    var code = 'lcd_1.setCursor(' + cursor_column + ', ' + cursor_row + ');\n';
-    code += 'lcd_1.print(' + stringoutput + ');\n';
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.setCursor(' + cursor_column + ', ' + cursor_row + ');\n';
+    code += 'lcd_' + num + '.print(' + stringoutput + ');\n';
     return code;
 };
 
 Blockly.Arduino['lcd2_print_customchar'] = function (block) {
-    arduino_lcd_setup();
+    var num = block.getFieldValue('NUM');
     var cursor_row = block.getFieldValue('CURSOR_ROW');
     var cursor_column = block.getFieldValue('CURSOR_COLUMN');
     var stringoutput = Blockly.Arduino.valueToCode(block, 'STRINGOUTPUT', Blockly.Arduino.ORDER_NONE) || '""';
-    var code = 'lcd_1.setCursor(' + cursor_column + ', ' + cursor_row + ');\n';
-    code += 'lcd_1.print(' + stringoutput + ');\n';
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.setCursor(' + cursor_column + ', ' + cursor_row + ');\n';
+    code += 'lcd_' + num + '.print(' + stringoutput + ');\n';
     return code;
 };
 
 Blockly.Arduino['lcd2_print2'] = function (block) {
-    arduino_lcd_setup();
+    var num = block.getFieldValue('NUM');
     var cursor_row = Blockly.Arduino.valueToCode(block, 'CURSOR_ROW', Blockly.Arduino.ORDER_NONE) || '0';
     var cursor_column = Blockly.Arduino.valueToCode(block, 'CURSOR_COLUMN', Blockly.Arduino.ORDER_NONE) || '0';
     var stringoutput = Blockly.Arduino.valueToCode(block, 'STRINGOUTPUT', Blockly.Arduino.ORDER_NONE) || '""';
-    var code = 'lcd_1.setCursor(' + cursor_column + ', ' + cursor_row + ');\n';
-    code += 'lcd_1.print(' + stringoutput + ');\n';
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.setCursor(' + cursor_column + ', ' + cursor_row + ');\n';
+    code += 'lcd_' + num + '.print(' + stringoutput + ');\n';
     return code;
 };
 
 Blockly.Arduino['lcd2_print2_customchar'] = function (block) {
-    arduino_lcd_setup();
+    var num = block.getFieldValue('NUM');
     var cursor_row = Blockly.Arduino.valueToCode(block, 'CURSOR_ROW', Blockly.Arduino.ORDER_NONE) || '0';
     var cursor_column = Blockly.Arduino.valueToCode(block, 'CURSOR_COLUMN', Blockly.Arduino.ORDER_NONE) || '0';
     var stringoutput = Blockly.Arduino.valueToCode(block, 'STRINGOUTPUT', Blockly.Arduino.ORDER_NONE) || '""';
-    var code = 'lcd_1.setCursor(' + cursor_column + ', ' + cursor_row + ');\n';
-    code += 'lcd_1.print(' + stringoutput + ');\n';
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.setCursor(' + cursor_column + ', ' + cursor_row + ');\n';
+    code += 'lcd_' + num + '.print(' + stringoutput + ');\n';
     return code;
 };
 
 Blockly.Arduino['lcd2_backlight'] = function (block) {
-    arduino_lcd_setup();
+    var num = block.getFieldValue('NUM');
     var state = block.getFieldValue('STATE');
-    var code = 'lcd_1.' + (state === 'true' ? 'backlight()' : 'noBacklight()') + ';\n';
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.' + (state === 'true' ? 'backlight()' : 'noBacklight()') + ';\n';
     return code;
 };
 
 Blockly.Arduino['lcd2_cursor'] = function (block) {
-    arduino_lcd_setup();
+    var num = block.getFieldValue('NUM');
     var mode = block.getFieldValue('MODE');
-    var code = '';
-    if (mode === 'show') {
-        code = 'lcd_1.cursor();\n';
-    } else if (mode === 'noCursor') {
-        code = 'lcd_1.noCursor();\n';
-    } else if (mode === 'blink') {
-        code = 'lcd_1.blink();\n';
-    } else {
-        code = 'lcd_1.noBlink();\n';
-    }
+    var method = mode === 'show' ? 'cursor()' :
+        mode === 'noCursor' ? 'noCursor()' :
+        mode === 'blink' ? 'blink()' : 'noBlink()';
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.' + method + ';\n';
     return code;
 };
 
 Blockly.Arduino['lcd2_display'] = function (block) {
-    arduino_lcd_setup();
+    var num = block.getFieldValue('NUM');
     var state = block.getFieldValue('STATE');
-    var code = 'lcd_1.' + (state === 'true' ? 'display()' : 'noDisplay()') + ';\n';
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.' + (state === 'true' ? 'display()' : 'noDisplay()') + ';\n';
     return code;
 };
 
 Blockly.Arduino['lcd2_scroll'] = function (block) {
-    arduino_lcd_setup();
+    var num = block.getFieldValue('NUM');
     var direction = block.getFieldValue('DIRECTION');
-    var code = 'lcd_1.' + direction + '();\n';
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.' + direction + '();\n';
     return code;
 };
 
 Blockly.Arduino['lcd2_customchar'] = function (block) {
-    arduino_lcd_setup();
+    var num = block.getFieldValue('NUM');
     var position = block.getFieldValue('POSITION');
     var data = Blockly.Arduino.valueToCode(block, 'DATA', Blockly.Arduino.ORDER_NONE) || '0';
-    var code = 'lcd_1.createChar(' + position + ', ' + data + ');\n';
+    arduino_lcd_includes();
+    var code = 'lcd_' + num + '.createChar(' + position + ', ' + data + ');\n';
     return code;
 };

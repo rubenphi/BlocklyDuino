@@ -444,11 +444,35 @@ peripheralBlocks.forEach(function(name) {
 
 // ===================== DISPLAY =====================
 
+var lcd_deviceDropdown = [['1', '1'], ['2', '2']];
+var lcd_typeDropdown = [['2x16', '2x16'], ['4x20', '4x20']];
+var lcd_addrDropdown = [
+    ['0x27 *', '0x27'], ['0x20', '0x20'], ['0x21', '0x21'], ['0x22', '0x22'],
+    ['0x23', '0x23'], ['0x24', '0x24'], ['0x25', '0x25'], ['0x26', '0x26'],
+    ['0x28', '0x28'], ['0x29', '0x29'], ['0x2A', '0x2A'], ['0x2B', '0x2B'],
+    ['0x2C', '0x2C'], ['0x2D', '0x2D'], ['0x2E', '0x2E'], ['0x2F', '0x2F'],
+    ['0x30', '0x30'], ['0x31', '0x31'], ['0x32', '0x32'], ['0x33', '0x33'],
+    ['0x34', '0x34'], ['0x35', '0x35'], ['0x36', '0x36'], ['0x37', '0x37'],
+    ['0x38', '0x38'], ['0x39', '0x39'], ['0x3A', '0x3A'], ['0x3B', '0x3B'],
+    ['0x3C', '0x3C'], ['0x3D', '0x3D'], ['0x3E', '0x3E'], ['0x3F *', '0x3F']
+];
+var lcd_colDropdown = [
+    ['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+    ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'], ['10', '10'], ['11', '11'],
+    ['12', '12'], ['13', '13'], ['14', '14'], ['15', '15'], ['16', '16'],
+    ['17', '17'], ['18', '18'], ['19', '19']
+];
+var lcd_rowDropdown = [['0', '0'], ['1', '1'], ['2', '2'], ['3', '3']];
+
 Blockly.Blocks['lcd2_begin_i2c'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD I2C Iniciar')
-            .appendField(new Blockly.FieldDropdown([['0x27', '0x27'], ['0x3F', '0x3F'], ['0x20', '0x20']]), 'ADDR');
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Iniciar')
+            .appendField(new Blockly.FieldDropdown(lcd_typeDropdown), 'TYPE')
+            .appendField('I2C ADDR')
+            .appendField(new Blockly.FieldDropdown(lcd_addrDropdown), 'ADDR');
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(130);
@@ -459,7 +483,9 @@ Blockly.Blocks['lcd2_begin_i2c'] = {
 Blockly.Blocks['lcd2_clear'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Limpiar');
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Limpiar');
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(130);
@@ -470,10 +496,13 @@ Blockly.Blocks['lcd2_clear'] = {
 Blockly.Blocks['lcd2_print'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Imprimir')
-            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1']]), 'CURSOR_ROW')
-            .appendField('col')
-            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'], ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13'], ['14', '14'], ['15', '15']]), 'CURSOR_COLUMN');
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Imprimir')
+            .appendField('Columna')
+            .appendField(new Blockly.FieldDropdown(lcd_colDropdown), 'CURSOR_COLUMN')
+            .appendField('Fila')
+            .appendField(new Blockly.FieldDropdown(lcd_rowDropdown), 'CURSOR_ROW');
         this.appendValueInput('STRINGOUTPUT')
             .setCheck('String')
             .appendField('texto');
@@ -487,10 +516,13 @@ Blockly.Blocks['lcd2_print'] = {
 Blockly.Blocks['lcd2_print_customchar'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Caracter Custom')
-            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1']]), 'CURSOR_ROW')
-            .appendField('col')
-            .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'], ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13'], ['14', '14'], ['15', '15']]), 'CURSOR_COLUMN');
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Imprimir Caracter Custom')
+            .appendField('Columna')
+            .appendField(new Blockly.FieldDropdown(lcd_colDropdown), 'CURSOR_COLUMN')
+            .appendField('Fila')
+            .appendField(new Blockly.FieldDropdown(lcd_rowDropdown), 'CURSOR_ROW');
         this.appendValueInput('STRINGOUTPUT')
             .setCheck('String')
             .appendField('texto');
@@ -504,13 +536,15 @@ Blockly.Blocks['lcd2_print_customchar'] = {
 Blockly.Blocks['lcd2_print2'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Imprimir');
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Imprimir');
         this.appendValueInput('CURSOR_COLUMN')
             .setCheck('Number')
-            .appendField('col');
+            .appendField('Columna');
         this.appendValueInput('CURSOR_ROW')
             .setCheck('Number')
-            .appendField('fila');
+            .appendField('Fila');
         this.appendValueInput('STRINGOUTPUT')
             .setCheck('String')
             .appendField('texto');
@@ -524,13 +558,15 @@ Blockly.Blocks['lcd2_print2'] = {
 Blockly.Blocks['lcd2_print2_customchar'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Caracter Custom');
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Imprimir Caracter Custom');
         this.appendValueInput('CURSOR_COLUMN')
             .setCheck('Number')
-            .appendField('col');
+            .appendField('Columna');
         this.appendValueInput('CURSOR_ROW')
             .setCheck('Number')
-            .appendField('fila');
+            .appendField('Fila');
         this.appendValueInput('STRINGOUTPUT')
             .setCheck('String')
             .appendField('texto');
@@ -544,7 +580,9 @@ Blockly.Blocks['lcd2_print2_customchar'] = {
 Blockly.Blocks['lcd2_backlight'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Retroiluminación')
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Retroiluminación')
             .appendField(new Blockly.FieldDropdown([['ENCENDIDO', 'true'], ['APAGADO', 'false']]), 'STATE');
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -556,7 +594,9 @@ Blockly.Blocks['lcd2_backlight'] = {
 Blockly.Blocks['lcd2_cursor'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Cursor')
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Cursor')
             .appendField(new Blockly.FieldDropdown([['MOSTRAR', 'show'], ['OCULTAR', 'noCursor'], ['BLOQUEO', 'blink'], ['SIN BLOQUEO', 'noBlink']]), 'MODE');
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -568,7 +608,9 @@ Blockly.Blocks['lcd2_cursor'] = {
 Blockly.Blocks['lcd2_display'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Display')
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Display')
             .appendField(new Blockly.FieldDropdown([['ENCENDIDO', 'true'], ['APAGADO', 'false']]), 'STATE');
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -580,8 +622,10 @@ Blockly.Blocks['lcd2_display'] = {
 Blockly.Blocks['lcd2_scroll'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Scroll')
-            .appendField(new Blockly.FieldDropdown([['IZQUIQUIA', 'scrollLeft'], ['DERECHA', 'scrollRight']]), 'DIRECTION');
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Scroll')
+            .appendField(new Blockly.FieldDropdown([['IZQUIERDA', 'scrollLeft'], ['DERECHA', 'scrollRight']]), 'DIRECTION');
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(130);
@@ -592,7 +636,9 @@ Blockly.Blocks['lcd2_scroll'] = {
 Blockly.Blocks['lcd2_customchar'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField('LCD Custom Char')
+            .appendField('LCD')
+            .appendField(new Blockly.FieldDropdown(lcd_deviceDropdown), 'NUM')
+            .appendField('Custom Char')
             .appendField(new Blockly.FieldDropdown([['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7']]), 'POSITION');
         this.appendValueInput('DATA')
             .setCheck('Array')
