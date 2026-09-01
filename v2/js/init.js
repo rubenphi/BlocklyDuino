@@ -156,6 +156,7 @@ Code.init = function () {
         // localStorage.
         // Restarting Firefox fixes this, so it looks like a bug.
     }
+    var defaultXml = '<xml><block type="board_setup" x="20" y="20"><statement name="SETUP_BODY"></statement></block><block type="board_loop" x="20" y="120"><statement name="LOOP_BODY"></statement></block></xml>';
     if (urlFile) {
         if (loadOnce !== null) {
             if (!confirm(MSG['xmlLoad'])) {
@@ -166,7 +167,7 @@ Code.init = function () {
         // Code.loadBlocks(data );
         // }, 'text');
     } else {
-        Code.loadBlocks();
+        Code.loadBlocks(defaultXml);
     }
 
     // Code.loadBlocks('');

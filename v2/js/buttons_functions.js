@@ -197,10 +197,18 @@ Code.newProject = function () {
     var count = Code.workspace.getAllBlocks().length;
     if (count > 0) {
         Blockly.confirm(Blockly.Msg['DELETE_ALL_BLOCKS'].replace('%1', count), function (confirm) {
-            if (confirm)
+            if (confirm) {
                 Code.workspace.clear();
-                return true;
+                var defaultXml = '<xml><block type="board_setup" x="20" y="20"><statement name="SETUP_BODY"></statement></block><block type="board_loop" x="20" y="120"><statement name="LOOP_BODY"></statement></block></xml>';
+                var xml = Blockly.Xml.textToDom(defaultXml);
+                Blockly.Xml.domToWorkspace(xml, Code.workspace);
+            }
+            return true;
         });
+    } else {
+        var defaultXml = '<xml><block type="board_setup" x="20" y="20"><statement name="SETUP_BODY"></statement></block><block type="board_loop" x="20" y="120"><statement name="LOOP_BODY"></statement></block></xml>';
+        var xml = Blockly.Xml.textToDom(defaultXml);
+        Blockly.Xml.domToWorkspace(xml, Code.workspace);
     }
 };
 
