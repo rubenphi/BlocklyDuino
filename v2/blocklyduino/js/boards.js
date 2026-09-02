@@ -66,7 +66,7 @@ Code.changeBoard = function ()  {
     profile["default"] = profile[newBoard][0];
 	document.getElementById('boardMenu').value = newBoard;
 	document.getElementById("boardSelected_span").textContent = profile["default"].description;
-	document.getElementById("portSelected_span").textContent = ' : ' + document.getElementById('serialMenu').options[document.getElementById('serialMenu').selectedIndex].value;
+	document.getElementById("portSelected_span").textContent = WebUSB.isConnected ? ' : Conectado' : '';
 	window.history.pushState({}, "blocklyduino", window.location.origin + window.location.pathname + search);
 	// close modal first
 	document.getElementById('overlayForModals').style.display = "none";
@@ -78,14 +78,16 @@ Code.changeBoard = function ()  {
 };
 
 /**
- * Set COM port
+ * Set COM port via WebUSB
  */
 Code.setPort = function ()  {
-    var serialPortMenu = document.getElementById('serialMenu');
-    var newPort = encodeURIComponent(serialPortMenu.options[serialPortMenu.selectedIndex].value);
+	if (WebUSB.isConnected) {
+		document.getElementById("portSelected_span").textContent = ' : Conectado';
+	} else {
+		WebUSB.connect();
+	}
 	document.getElementById('overlayForModals').style.display = "none";
 	document.getElementById('portListModal').classList.remove('show');
-	document.getElementById("portSelected_span").textContent = ' : ' + newPort;
 	if (newPort != 'none') {
 		document.getElementById('serialButton').classList.add('active');
 		document.getElementById('serialButton').title = newPort;

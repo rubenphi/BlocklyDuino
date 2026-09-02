@@ -200,7 +200,7 @@
                                 <i class="fas fa-check"></i>
                             </span>
                         </button>
-                        <button id="serialButton" class="iconButtons" onclick="Code.portsListModalShow()">
+                        <button id="serialButton" class="iconButtons" onclick="WebUSB.toggle()">
                             <span id="serialButton_span">
                                 <i class="fab fa-usb"></i>
                             </span>
@@ -542,16 +542,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <i class="fab fa-usb"></i>
-                    <span id="portListModalHeader_span"></span>
+                    <span id="portListModalHeader_span">Dispositivo</span>
                     <span class="closeModal" id="closeModalPorts">&times;</span>
                 </div>
                 <div class="modal-body" id="portListModalBody">
+                    <div style="padding:10px;">
+                        <p>No hay dispositivo conectado.</p>
+                        <p>Haz clic en el botón USB para conectar.</p>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <select id="serialMenu">
-                        <option value="none">...</option>
-                    </select>
-                    <button id="portListModalDialogOkay" onclick="Code.setPort()">&#10004;</button>
+                    <button id="portListModalDialogOkay" onclick="WebUSB.toggle()">Conectar</button>
                 </div>
             </div>
         </div>
@@ -582,6 +583,9 @@
     <script src="./js/init.js"></script>
     <script src="./js/typed_variable.js"></script>
     <script src="./js/buttons_functions.js"></script>
+    <script src="./js/webusb.js"></script>
+    <script src="./js/compiler.js"></script>
+    <script type="module" src="./js/esp32flasher.js"></script>
     <script src="./js/dialog.js"></script>
     <script src="./js/renderingConstant.js"></script>
     <script src="./js/toolbox.js"></script>
@@ -606,6 +610,7 @@
     <script src="./blocklyduino/blocks/grove/grove.js" async></script>
     <script src="./blocklyduino/blocks/relay/relay.js" async></script>
     <script src="./blocklyduino/blocks/servo/servo.js" async></script>
+    <script src="./blocklyduino/blocks/servo/motor_servo.js" async></script>
     <script src="./blocklyduino/blocks/typed_variable.js" async></script>
     <script src="./blocklyduino/blocks/time/time.js"></script>
     <script src="./blocklyduino/blocks/blocks_stub.js" async></script>

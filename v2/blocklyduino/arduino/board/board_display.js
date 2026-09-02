@@ -18,7 +18,7 @@ goog.require('Blockly.Arduino');
 function arduino_lcd_includes() {
     if (!Blockly.Arduino.includes_['Wire']) {
         Blockly.Arduino.includes_['Wire'] = '#include <Wire.h>';
-        Blockly.Arduino.includes_['LiquidCrystal_I2C'] = '#include <LiquidCrystal_I2C.h>';
+        Blockly.Arduino.includes_['LiquidCrystal_I2C'] = '// Library: LiquidCrystal_I2C by Frank de Brabander\n// https://github.com/johnrickman/LiquidCrystal_I2C\n#include <LiquidCrystal_I2C.h>';
     }
 }
 
@@ -36,7 +36,7 @@ Blockly.Arduino['lcd2_begin_i2c'] = function (block) {
     var dims = arduino_lcd_dims(type);
     arduino_lcd_includes();
     Blockly.Arduino.definitions_['lcd_' + num] = 'LiquidCrystal_I2C lcd_' + num + '(' + addr + ',' + dims[0] + ',' + dims[1] + ');';
-    Blockly.Arduino.setups_['setup_lcd_' + num] = 'Wire.begin();\n  lcd_' + num + '.init();\n  lcd_' + num + '.backlight();';
+    Blockly.Arduino.setups_['setup_lcd_' + num] = 'lcd_' + num + '.begin();\n  lcd_' + num + '.noCursor();\n  lcd_' + num + '.backlight();';
     var code = '';
     return code;
 };

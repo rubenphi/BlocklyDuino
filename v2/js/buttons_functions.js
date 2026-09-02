@@ -125,11 +125,7 @@ Code.boardsListModalShow = function () {
 Code.portsListModalShow = function () {
     document.getElementById('overlayForModals').style.display = "block";
     document.getElementById('portListModal').classList.add('show');
-    var portValue = document.getElementById("serialMenu").value;
-    if (portValue !== 'none') {
-        document.getElementById("serialMenu").selectedIndex = portValue;
-        document.getElementById("serialMenu").value = portValue;
-    }
+    WebUSB.updateUI();
     window.addEventListener('click', Code.portsListModalHide, 'once');
 };
 document.getElementById("closeModalBoards").onclick = function () {
@@ -245,115 +241,84 @@ Code.saveCodeFile = function () {
   * Arduino IDE with the --verify flag.
   */
 
+/**
+  * Compile .ino code via WebSocket server.
+  */
 Code.verifyCodeFile = function () {
     var code = Blockly.Arduino.workspaceToCode(Code.workspace);
-    var boardId = Code.getStringParamFromUrl('board', '');
-    
-    alert("Ready to verify to Arduino.");
-    
-    Code.uploadCode(code, boardId, 'verify', 
-                    function(status, response, errorInfo) {
-                        var element = document.getElementById("content_serial");
-                        element.innerHTML = response;
-                        if (status == 200) {
-                            alert("Program verified ok");
-                        } else {
-                            alert("Error verifying program: " + errorInfo);
-                        }
-                    });
+    var fqbn = profile["default"].upload_arg;
+
+    console.log('=== CODIGO GENERADO ===');
+    console.log(code);
+    console.log('=== FIN CODIGO ===');
+
+    if (typeof Compiler === 'undefined') {
+        alert('Modulo de compilacion no disponible.\nEjecuta servidor_compilacion.py en el PC del profesor.');
+        return;
+    }
+
+    if (fqbn === 'none' || fqbn === '') {
+        alert('Selecciona una placa antes de compilar.');
+        return;
+    }
+
+    Compiler.updateStatus('Compilando...');
+    Compiler.compile(code, fqbn, document.getElementById("detailedCompilation").checked)
+        .then(function (result) {
+            Compiler.updateStatus('Compilacion exitosa');
+            alert('Compilacion exitosa.');
+        })
+        .catch(function (err) {
+            Compiler.updateStatus('Error: ' + err.message);
+            alert('Error compilando: ' + err.message);
+        });
 };
 
 /**
-  * Creats an INO file containing the Arduino code from the Blockly workspace
-  * and posts it to http://127.0.0.1/upload/ which will pass it to the 
-  * Arduino IDE with the --verify flag.
+  * Compile and flash via WebUSB.
   */
-
 Code.uploadCodeFile = function () {
     var code = Blockly.Arduino.workspaceToCode(Code.workspace);
-    var boardId = Code.getStringParamFromUrl('board', '');
-    
-    alert("Ready to upload to Arduino.");
-    
-    Code.uploadCode(code, boardId, 'upload', 
-                    function(status, response, errorInfo) {
-                        var element = document.getElementById("content_serial");
-                        element.innerHTML = response;
-                        if (status == 200) {
-                            alert("Program uploaded ok");
-                        } else {
-                            alert("Error uploading program: " + errorInfo);
-                        }
-                    });
-};
+    var fqbn = profile["default"].upload_arg;
 
-Code.uploadCode = function (code, boardId, mode, callback) {
-    //var spinner = new Spinner().spin(target);
+    console.log('=== CODIGO GENERADO (upload) ===');
+    console.log(code);
+    console.log('=== FIN CODIGO ===');
 
-    var boardSpecs = {
-        "arduino_leonardo": "arduino:avr:leonardo",
-        "arduino_mega": "arduino:avr:mega",
-        "arduino_micro": "arduino:avr:micro",
-        "arduino_mini": "arduino:avr:mini",
-        "arduino_nano": "arduino:avr:nano",
-        "arduino_pro8": "arduino:avr:pro",
-        "arduino_pro16": "arduino:avr:pro",
-        "arduino_uno": "arduino:avr:uno",
-        "arduino_yun": "arduino:avr:yun",
-        "lilypad": "arduino:avr:lilypad"
-    };
-    var url = "http://127.0.0.1:8080/" + mode + "/";
-    var method = "POST";
-    var async = true;
-    var request = new XMLHttpRequest();
-    var comma = "";
-    
-    if (boardId != '') {
-        url += "board=" + boardSpecs[boardId];
-        comma = ","
+    if (typeof Compiler === 'undefined') {
+        alert('Modulo de compilacion no disponible.\nEjecuta servidor_compilacion.py en el PC del profesor.');
+        return;
     }
-    
-    if (document.getElementById("detailedCompilation").checked) {
-        url += comma + "verbose=";
+
+    if (fqbn === 'none' || fqbn === '') {
+        alert('Selecciona una placa antes de subir el programa (por ejemplo ESP32 DevKit).');
+        return;
     }
-    request.onreadystatechange = function() {
-        if (request.readyState != 4) { 
-            return; 
-        }
-        
-        //spinner.stop();
-        
-        var status = parseInt(request.status); // HTTP response status, e.g., 200 for "200 OK"
-        var errorInfo = null;
-        var response = request.response;
 
-        switch (status) {
-        case 200:
-            break;
-        case 0:
-            errorInfo = "code 0\n\nCould not connect to server at " + url + ".  Is the local web server running?";
-            break;
-        case 400:
-            errorInfo = "code 400\n\nBuild failed - probably due to invalid source code.  Make sure that there are no missing connections in the blocks.";
-            break;
-        case 500:
-            errorInfo = "code 500\n\nUpload failed.  Is the Arduino connected to USB port?";
-            break;
-        case 501:
-            errorInfo = "code 501\n\nUpload failed.  Is 'ino' installed and in your path?  This only works on Mac OS X and Linux at this time.";
-            break;
-        default:
-            errorInfo = "code " + status + "\n\nUnknown error.";
-            break;
-        };
-        
-        callback(status, response, errorInfo);
-    };
+    if (typeof WebUSB === 'undefined' || !WebUSB.isConnected) {
+        alert('No hay dispositivo conectado.\nHaz clic en el boton USB para conectar.');
+        return;
+    }
 
-    request.open(method, url, async);
-    request.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-    request.send(code);	     
-    
+    var isESP32 = fqbn.indexOf('esp32') !== -1;
+
+    Compiler.updateStatus('Compilando...');
+    Compiler.compile(code, fqbn, document.getElementById("detailedCompilation").checked)
+        .then(function (result) {
+            if (isESP32) {
+                return Compiler.flashESP32(result.binary_hex);
+            } else {
+                return Compiler.flashAVR(result.binary_hex);
+            }
+        })
+        .then(function () {
+            Compiler.updateStatus('Flasheo completado');
+            alert('Programa subido exitosamente.');
+        })
+        .catch(function (err) {
+            Compiler.updateStatus('Error: ' + err.message);
+            alert('Error: ' + err.message);
+        });
 };
 
 /**

@@ -50,6 +50,8 @@ Code.init = function () {
     Code.setBoard();
     Code.initLanguage();
     setOnOffLine();
+    if (typeof WebUSB !== 'undefined') WebUSB.updateUI();
+    if (typeof Compiler !== 'undefined') Compiler.init();
     collapsibleContentInit();
     var rtl = Code.isRtl();
     //define resizable workspace
@@ -307,7 +309,7 @@ Code.initLanguage = function () {
     document.getElementById('codeEditorColorSpan').textContent = MSG['codeEditorColorSpan'];
     document.getElementById('themeSpan').textContent = MSG['themeSpan'];
     document.getElementById('renderSpan').textContent = MSG['renderSpan'];
-    document.getElementById('serialButton').title = MSG['serialButtonSpan'];
+    document.getElementById('serialButton').title = WebUSB.isSupported() ? 'Conectar dispositivo (WebUSB)' : 'WebUSB no soportado';
     document.getElementById('fullScreenButton').title = MSG['fullScreenButton_span'];
     document.getElementById('undoButton').title = MSG['undoButton_span'];
     document.getElementById('redoButton').title = MSG['redoButton_span'];

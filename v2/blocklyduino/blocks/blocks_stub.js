@@ -436,8 +436,6 @@ actuatorBlocks.forEach(function(name) {
 
 // ===================== MOTOR =====================
 var motorBlocks = [
-  'motor_servo_move', 'motor_servo_oscillator_set', 'motor_servo_oscillator_action',
-  'motor_servo_move_i2c',
   'motor_stepper_init', 'motor_stepper_setspeed', 'motor_stepper_step',
   'motor_dcpwm', 'motor_l298n_init', 'motor_l298n_move',
   'motor_l298p_init', 'motor_l298p_move'
