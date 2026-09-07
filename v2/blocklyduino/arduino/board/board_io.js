@@ -17,7 +17,8 @@ goog.require('Blockly.Arduino');
 
 Blockly.Arduino['io_digital_read'] = function (block) {
     var dropdown_pin = block.getFieldValue('PIN');
-    Blockly.Arduino.setups_['setup_input_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', INPUT);';
+    // No se fuerza pinMode(INPUT): el modo lo configura el bloque "Activar
+    // resistencia" (io_pull) cuando proceda, para no pisar un Pull-Up.
     var code = 'digitalRead(' + dropdown_pin + ')';
     return [code, Blockly.Arduino.ORDER_ATOMIC];
 };
@@ -32,7 +33,6 @@ Blockly.Arduino['io_digital_write'] = function (block) {
 
 Blockly.Arduino['io_analog_read'] = function (block) {
     var dropdown_pin = block.getFieldValue('PIN');
-    Blockly.Arduino.setups_['setup_input_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', INPUT);';
     var code = 'analogRead(' + dropdown_pin + ')';
     return [code, Blockly.Arduino.ORDER_ATOMIC];
 };
@@ -57,7 +57,6 @@ Blockly.Arduino['io_digital_read2'] = function (block) {
     var value_pin = Blockly.Arduino.valueToCode(this, 'PIN', Blockly.Arduino.ORDER_ATOMIC) || '0';
     Blockly.Arduino.codeFunctions_['fnc_dynamic_digitalRead'] =
         'int fnc_dynamic_digitalRead(int _pin){\n' +
-        '  pinMode(_pin,INPUT);\n' +
         '  return digitalRead(_pin);\n' +
         '}\n';
     var code = 'fnc_dynamic_digitalRead(' + value_pin + ')';
@@ -80,7 +79,6 @@ Blockly.Arduino['io_analog_read2'] = function (block) {
     var value_pin = Blockly.Arduino.valueToCode(this, 'PIN', Blockly.Arduino.ORDER_ATOMIC) || '0';
     Blockly.Arduino.codeFunctions_['fnc_dynamic_analogRead'] =
         'float fnc_dynamic_analogRead(int _pin){\n' +
-        '  pinMode(_pin,INPUT);\n' +
         '  return ((float)analogRead(_pin));\n' +
         '}\n';
     var code = 'fnc_dynamic_analogRead(' + value_pin + ')';
@@ -132,7 +130,6 @@ Blockly.Arduino['io_interrupt'] = function (block) {
 
 Blockly.Arduino['io_digital_read_i2c'] = function (block) {
     var dropdown_pin = block.getFieldValue('PIN');
-    Blockly.Arduino.setups_['setup_input_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', INPUT);';
     var code = 'digitalRead(' + dropdown_pin + ')';
     return [code, Blockly.Arduino.ORDER_ATOMIC];
 };

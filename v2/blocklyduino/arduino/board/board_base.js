@@ -32,7 +32,8 @@ Blockly.Arduino['board_base_inout_digital_write'] = function (block) {
 
 Blockly.Arduino['board_base_inout_digital_read'] = function (block) {
     var dropdown_pin = block.getFieldValue('PIN');
-    Blockly.Arduino.setups_['setup_input_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', INPUT);';
+    // No se fuerza pinMode(INPUT): lo configura el bloque "Activar resistencia"
+    // (io_pull) cuando proceda, para no pisar un Pull-Up del usuario.
     var code = 'digitalRead(' + dropdown_pin + ')';
     return [code, Blockly.Arduino.ORDER_ATOMIC];
 };

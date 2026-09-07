@@ -266,7 +266,9 @@ var WebUSB = {
         var pid = this.deviceInfo.usbProductId;
 
         var knownDevices = [
-            { vid: 0x303A, pids: [0x0002, 0x0012, 0x1001], name: 'ESP32' },
+            { vid: 0x303A, pids: [0x0002], name: 'ESP32-S2' },
+            { vid: 0x303A, pids: [0x0012], name: 'ESP32-S3' },
+            { vid: 0x303A, pids: [0x1001, 0x800C], name: 'ESP32-C3' },
             { vid: 0x1A86, pids: [0x7523, 0x5523], name: 'CH340' },
             { vid: 0x10C4, pids: [0xEA60], name: 'CP2102' },
             { vid: 0x2341, pids: [0x0036, 0x0037, 0x0042, 0x0001], name: 'Arduino' },

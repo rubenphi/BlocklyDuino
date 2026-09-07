@@ -816,6 +816,7 @@ var toolbox_unified = {
             { "kind": "block", "type": "oled_rotation" },
             { "kind": "block", "type": "oled_clear" },
             { "kind": "block", "type": "oled_show" },
+            { "kind": "block", "type": "oled_autoshow" },
             {
               "kind": "block",
               "blockxml": "<block type='oled_drawtext'><value name='X'><shadow type='math_number'><field name='NUM'>0</field></shadow></value><value name='Y'><shadow type='math_number'><field name='NUM'>0</field></shadow></value><value name='TXT'><shadow type='text'><field name='TEXT'></field></shadow></value></block>"
@@ -834,7 +835,7 @@ var toolbox_unified = {
             },
             {
               "kind": "block",
-              "blockxml": "<block type='oled_drawrectangle'><value name='X1'><shadow type='math_number'><field name='NUM'>0</field></shadow></value><value name='Y1'><shadow type='math_number'><field name='NUM'>0</field></shadow></value><value name='X2'><shadow type='math_number'><field name='NUM'>64</field></shadow></value><value name='Y2'><shadow type='math_number'><field name='NUM'>32</field></shadow></value></block>"
+              "blockxml": "<block type='oled_drawrectangle'><value name='X1'><shadow type='math_number'><field name='NUM'>0</field></shadow></value><value name='Y1'><shadow type='math_number'><field name='NUM'>0</field></shadow></value><value name='W'><shadow type='math_number'><field name='NUM'>64</field></shadow></value><value name='H'><shadow type='math_number'><field name='NUM'>32</field></shadow></value></block>"
             },
             {
               "kind": "block",

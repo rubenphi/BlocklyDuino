@@ -53,7 +53,7 @@ BOARD_MAP = {
     'arduino_yun':       'arduino:avr:yun',
     'lilypad':           'arduino:avr:lilypad',
     'esp32_devkit':      'esp32:esp32:esp32',
-    'esp32_c3_mini':     'esp32:esp32:c3',
+    'esp32_c3_mini':     'esp32:esp32:esp32c3',
 }
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

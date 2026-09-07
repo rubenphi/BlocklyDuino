@@ -14,22 +14,56 @@
  * @param {string} defaultXml Text representation of default blocks.
  */
 Code.loadBlocks = function (defaultXml) {
-    try {
-        var loadOnce = window.sessionStorage.loadOnceBlocks;
-    } catch (e) {
-        // Firefox sometimes throws a SecurityError when accessing sessionStorage.
-        // Restarting Firefox fixes this, so it looks like a bug.
-        var loadOnce = null;
-    }
-    if (loadOnce) {
-        // Language switching stores the blocks during the reload.
-        delete window.sessionStorage.loadOnceBlocks;
-        var xml = Blockly.Xml.textToDom(loadOnce);
+    // Restaurar un autoguardado reciente (dentro de las últimas 8 horas) si existe.
+    var autosave = Code.loadAutosaveXml();
+    if (autosave) {
+        var xml = Blockly.Xml.textToDom(autosave);
         Blockly.Xml.domToWorkspace(xml, Code.workspace);
     } else if (defaultXml) {
         // Load the editor with default starting blocks.
         var xml = Blockly.Xml.textToDom(defaultXml);
         Blockly.Xml.domToWorkspace(xml, Code.workspace);
+    }
+};
+
+/**
+ * Guarda los bloques del workspace en localStorage con una marca de tiempo.
+ * Se restauran al recargar la página solo si la copia es reciente (menos de
+ * AUTOSAVE_TTL_MS), de modo que el estado persiste durante la sesión de
+ * trabajo pero no queda guardado indefinidamente en el navegador.
+ */
+Code.AUTOSAVE_KEY = 'blocklyduino_workspace_autosave';
+Code.AUTOSAVE_TTL_MS = 8 * 60 * 60 * 1000; // 8 horas
+
+Code.autosaveBlocks = function () {
+    try {
+        var xml = Blockly.Xml.workspaceToDom(Code.workspace);
+        var text = Blockly.Xml.domToText(xml);
+        var data = { ts: Date.now(), xml: text };
+        window.localStorage.setItem(Code.AUTOSAVE_KEY, JSON.stringify(data));
+    } catch (e) {
+        // localStorage puede no estar disponible (p. ej. bloqueado o file://).
+    }
+};
+
+/**
+ * Devuelve el XML guardado si existe y es reciente (dentro de AUTOSAVE_TTL_MS),
+ * o null en caso contrario (borrando cualquier copia caducada).
+ */
+Code.loadAutosaveXml = function () {
+    try {
+        var raw = window.localStorage.getItem(Code.AUTOSAVE_KEY);
+        if (!raw) {
+            return null;
+        }
+        var data = JSON.parse(raw);
+        if (!data || typeof data.xml !== 'string' || Date.now() - data.ts > Code.AUTOSAVE_TTL_MS) {
+            window.localStorage.removeItem(Code.AUTOSAVE_KEY);
+            return null;
+        }
+        return data.xml;
+    } catch (e) {
+        return null;
     }
 };
 
@@ -261,6 +295,13 @@ Code.init = function () {
 
     Code.renderContent();
     Code.workspace.addChangeListener(Code.renderContent);
+    // Guarda los bloques en localStorage ante cualquier cambio del usuario, de
+    // modo que se conserven al recargar la página durante la sesión de trabajo.
+    Code.workspace.addChangeListener(Code.autosaveBlocks);
+    // Respaldo: guardar también al recargar/cerrar la página (pagehide y
+    // beforeunload son más fiables que unload en navegadores modernos).
+    window.addEventListener('pagehide', Code.autosaveBlocks, false);
+    window.addEventListener('beforeunload', Code.autosaveBlocks, false);
 };
 
 /**

@@ -57,11 +57,15 @@ var ESP32Flasher = {
             // Flash the binary files
             var totalSize = files.reduce(function (s, f) { return s + f.data.length; }, 0);
             onStatus('Escribiendo firmware (' + (totalSize / 1024).toFixed(1) + ' KB)...');
+            // 'keep' conserva los parametros SPI de flash que arduino-cli ya
+            // grabo en el bootloader del merged.bin para la placa elegida.
+            // Forzar aqui un tamaño (4MB) o modo concretos rompe placas cuyo
+            // modulo C3 trae 2MB/4MB o requiere otro modo SPI.
             var flashOptions = {
                 fileArray: files,
-                flashMode: 'dio',
-                flashFreq: '80m',
-                flashSize: '4MB',
+                flashMode: 'keep',
+                flashFreq: 'keep',
+                flashSize: 'keep',
                 eraseAll: false,
                 compress: true,
                 reportProgress: function (fileIndex, written, total) {
@@ -72,6 +76,17 @@ var ESP32Flasher = {
 
             await this.esploader.writeFlash(flashOptions);
             onStatus('Firmware escrito. Reiniciando...');
+
+            // En placas con USB nativo (USB-Serial/JTAG, p.ej. ESP32-C3 Mini
+            // conectado por su USB-C) el reset clasico por DTR/RTS no toca la
+            // linea EN: hay que usar la secuencia USB-JTAG de esptool-js.
+            // El PID 0x1001 es el mismo que esptool-js detecta internamente.
+            if (this.transport.getPid && this.transport.getPid() === 0x1001 &&
+                this.esploader.resetConstructors &&
+                this.esploader.resetConstructors.usbJTAGSerialReset) {
+                this.esploader.resetConstructors.hardReset =
+                    this.esploader.resetConstructors.usbJTAGSerialReset;
+            }
 
             // Reset the device
             await this.esploader.after('hard_reset');

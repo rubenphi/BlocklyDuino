@@ -213,24 +213,17 @@ Code.newProject = function () {
  * prompts the users to save it into their local file system.
  */
 Code.saveCodeFile = function () {
+    console.log('saveCodeFile: INICIO');
     var utc = new Date().toJSON().slice(0, 10).replace(/-/g, '_');
-    var dataToSave = Blockly.Arduino.workspaceToCode(Code.workspace);
-    var blob = new Blob([dataToSave], {
-        type: 'text/plain;charset=utf-8'
-    });
-    Blockly.prompt(MSG['save_span'], 'code', function (fileNameSave) {
-        if (fileNameSave) {
-            var fakeDownloadLink = document.createElement("a");
-            fakeDownloadLink.download = fileNameSave + ".ino";
-            fakeDownloadLink.href = window.URL.createObjectURL(blob);
-            fakeDownloadLink.onclick = function destroyClickedElement(event) {
-                document.body.removeChild(event.target);
-            };
-            fakeDownloadLink.style.display = "none";
-            document.body.appendChild(fakeDownloadLink);
-            fakeDownloadLink.click();
-        }
-    });
+    var baseName = 'bloque_' + utc;
+    try {
+        var dataToSave = Blockly.Arduino.workspaceToCode(Code.workspace);
+    } catch (error) {
+        console.error('saveCodeFile: error generando codigo', error);
+        alert('Error generando el codigo: ' + error.message);
+        return;
+    }
+    Code.downloadFile(dataToSave, baseName + '.ino', 'text/plain;charset=utf-8');
 };
 
 
@@ -326,30 +319,44 @@ Code.uploadCodeFile = function () {
  * prompts the users to save it into their local file system.
  */
 Code.saveXmlBlocklyFile = function () {
-    var xmlData = Blockly.Xml.workspaceToDom(Code.workspace);
-    var dataToSave = Blockly.Xml.domToPrettyText(xmlData);
-    var blob = new Blob([dataToSave], {
-        type: 'text/xml;charset=utf-8'
-    });
-    Blockly.prompt(MSG['save_span'], 'blockly', function (fileNameSave) {
-        if (fileNameSave) {
-            var fakeDownloadLink = document.createElement("a");
-            fakeDownloadLink.download = fileNameSave + ".bduino";
-            fakeDownloadLink.href = window.URL.createObjectURL(blob);
-            fakeDownloadLink.onclick = function destroyClickedElement(event) {
-                document.body.removeChild(event.target);
-            };
-            fakeDownloadLink.style.display = "none";
-            document.body.appendChild(fakeDownloadLink);
-            fakeDownloadLink.click();
-        }
-    });
+    console.log('saveXmlBlocklyFile: INICIO');
+    var utc = new Date().toJSON().slice(0, 10).replace(/-/g, '_');
+    var baseName = 'proyecto_' + utc;
+    try {
+        var xmlData = Blockly.Xml.workspaceToDom(Code.workspace);
+        var dataToSave = Blockly.Xml.domToPrettyText(xmlData);
+    } catch (error) {
+        console.error('saveXmlBlocklyFile: error serializando bloques', error);
+        alert('Error guardando el proyecto: ' + error.message);
+        return;
+    }
+    Code.downloadFile(dataToSave, baseName + '.bduino', 'text/xml;charset=utf-8');
+};
+
+/**
+ * Descarga un texto como archivo de forma robusta (no depende de dialogo ni de
+ * window.URL, evitando que los navegadores bloqueen la descarga sintetica).
+ */
+Code.downloadFile = function (content, fileName, mimeType) {
+    var blob = new Blob([content], { type: mimeType });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.download = fileName;
+    link.href = url;
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(function () {
+        URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+    }, 0);
 };
 
 /**
  * Load blocks from local file.
  */
 Code.loadXmlBlocklyFile = function () {
+    console.log('loadXmlBlocklyFile: INICIO');
     // Create event listener function
     var parseInputXMLfile = function (e) {
         var files = e.target.files;
@@ -399,14 +406,17 @@ Code.loadBlocksfromXml = function (defaultXml) {
     var xml = Blockly.Xml.textToDom(defaultXml);
     if (count > 0) {
         Blockly.confirm(MSG['loadXML_span'], function (confirm) {
-            if (confirm)
+            if (confirm) {
                 Code.workspace.clear();
                 Blockly.Xml.domToWorkspace(xml, Code.workspace);
-                return true;
+                Code.renderContent();
+                Code.autosaveBlocks();
+            }
         });
     } else {
         Blockly.Xml.domToWorkspace(xml, Code.workspace);
-        return true;
+        Code.renderContent();
+        Code.autosaveBlocks();
     }
 };
 

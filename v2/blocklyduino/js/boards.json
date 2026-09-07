@@ -285,6 +285,6 @@ var profile = {
 			"voltage": "3.3V",
 			"inout": "15",
 			"speed": "115200",
-			"upload_arg": "esp32:esp32:c3"
+			"upload_arg": "esp32:esp32:esp32c3"
 		}]
 }

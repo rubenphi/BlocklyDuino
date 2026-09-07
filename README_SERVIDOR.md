@@ -110,7 +110,7 @@ puede ignorar.
 | Placa en BlocklyDuino | FQBN de arduino-cli             |
 |-----------------------|---------------------------------|
 | ESP32 DevKit          | `esp32:esp32:esp32`             |
-| ESP32-C3 Mini         | `esp32:esp32:c3`                |
+| ESP32-C3 Mini         | `esp32:esp32:esp32c3`           |
 | Arduino Uno           | `arduino:avr:uno`               |
 | Arduino Nano          | `arduino:avr:nano:cpu=atmega328old` |
 | Arduino Mega          | `arduino:avr:mega:cpu=atmega2560`   |
